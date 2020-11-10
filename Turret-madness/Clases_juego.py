@@ -170,7 +170,75 @@ def Pause(a,color):
     cent=hola.get_rect(center=(int(1280/2),int(720/2)))
     pantalla.blit(hola,cent)
 pause=False
-
+def main_menu():
+    running=True
+    click=False
+    boton_1=None
+    boton_2=None
+    boton_3=None
+    pos=540,300
+    while running:
+        if boton_1==None and boton_2==None and boton_3==None: 
+            pantalla.blit(bg_image,(0,0))
+            draw_txt("TOWER",font_2, (0,0,0),pantalla,405,65)
+            draw_txt("TOWER",font_2, (255,255,255),pantalla,392,50)
+            draw_txt("MADNESS",font_1, (0,0,0),pantalla,381,185)
+            draw_txt("MADNESS",font_1, (255,255,255),pantalla,368,170)
+        else:
+            pantalla.blit(bg_image,boton_1,boton_1)
+            pantalla.blit(bg_image,boton_2,boton_2)       
+            pantalla.blit(bg_image,boton_3,boton_3)
+             
+        mx,my=p.mouse.get_pos()
+        boton_1=pantalla.blit(boton,pos)
+        boton_2=pantalla.blit(boton,(pos[0],pos[1]+100))
+        boton_3=pantalla.blit(boton,(pos[0],pos[1]+200))
+        draw_txt("JUGAR",font, (0,0,0),pantalla,580,308)
+        draw_txt("JUGAR",font, (255,255,255),pantalla,578,305)
+        draw_txt("OPCIONES",font, (0,0,0),pantalla,554,408)
+        draw_txt("OPCIONES",font, (255,255,255),pantalla,552,405)
+        draw_txt("CONTROLES",font_3, (0,0,0),pantalla,554,511)
+        draw_txt("CONTROLES",font_3, (255,255,255),pantalla,552,508)
+        
+        if boton_1.collidepoint((mx,my)):
+            pantalla.blit(bg_image,boton_1,boton_1)
+            boton_1=pantalla.blit(boton,(pos[0],pos[1]-5))
+            draw_txt("JUGAR",font, (0,0,0),pantalla,580,303)
+            draw_txt("JUGAR",font, (255,255,255),pantalla,578,300)
+            canal1.play(tap)
+            if click:
+                canal2.play(select)
+                game()
+        if boton_2.collidepoint((mx,my)):
+            pantalla.blit(bg_image,boton_2,boton_2)
+            boton_2=pantalla.blit(boton,(pos[0],pos[1]+95))
+            draw_txt("OPCIONES",font, (0,0,0),pantalla,554,403)
+            draw_txt("OPCIONES",font, (255,255,255),pantalla,552,400)
+            canal1.play(tap)
+            if click:
+                canal1.play(select)
+                opciones()
+        if boton_3.collidepoint((mx,my)):
+            pantalla.blit(bg_image,boton_3,boton_3)
+            boton_3=pantalla.blit(boton,(pos[0],pos[1]+195))
+            draw_txt("CONTROLES",font_3, (0,0,0),pantalla,554,506)
+            draw_txt("CONTROLES",font_3, (255,255,255),pantalla,552,503)
+            canal1.play(tap)            
+            if click: 
+                canal1.play(select)
+                controles()
+        for event in p.event.get():
+            if event.type==p.QUIT:
+                running=False
+                sys.exit()
+            elif event.type==p.KEYDOWN:
+                if event.key==p.K_ESCAPE:
+                    running==False
+            elif event.type==p.MOUSEBUTTONDOWN:
+                if (event.button==1 and boton_1.collidepoint((mx,my))) or (event.button==1 and boton_2.collidepoint((mx,my))) or (event.button==1 and boton_3.collidepoint((mx,my))):
+                    click=True
+        p.display.update()
+        clock.tick(60)
 def game():
     Run=True
     while Run:
