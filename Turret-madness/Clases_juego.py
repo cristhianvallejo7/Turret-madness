@@ -85,13 +85,16 @@ class celda:
         return self
 #Inicio de declaración de variables
 p.init()#Inicializar el juego
+p.mixer.init()
 angulo=0
 salud=100
 dinero=7000
 xhand,yhand=50,150#coordenadas iniciales de la mano
 est=(0,0,0)#Estado para poner torreta
 est1=(0,0,0)#Estado para quitar torreta
-pantalla=p.display.set_mode((1280,720))#Tamaño de la pantalla
+#pantalla=p.display.set_mode((1280,720))#Tamaño de la pantalla
+size=width,height=1280,720
+pantalla=p.display.set_mode(size)#de esta manera si usamos las variables de size se puede cambiar el tamaño de la pantalla sin modificar los números de abajo 
 p.display.set_caption("Turret Madness")#Caption :v
 fondo=p.image.load("images\\Fondo.png").convert()#cargar el fondo
 cfondo=fondo.get_rect(center=(int(1280/2),int(720/2)))
@@ -102,6 +105,26 @@ usable=[]
 balimg=[]
 vida=[100,200,300,400,500,600,800]
 vidturr=0
+font= p.font.Font('spacerunnertwoital.TTF',35)#no supe si se puede cambiar el tamaño de la fuente así que llamé varias veces la misma para diferentes tamaños
+font_3= p.font.Font('spacerunnertwoital.TTF',30)
+font_1= p.font.Font('spacerunnertwoital.TTF',100)
+font_2= p.font.Font('spacerunnertwoital.TTF',150)
+clock=p.time.Clock()
+#bg_image=p.image.load("fondo-proyecto.png")
+boton=p.image.load("boton.png")
+back=p.image.load("flecha-regresar.png")
+select=p.mixer.Sound('sonido_boton.mp3')
+tap=p.mixer.Sound('boton_tap.mp3')
+p.mixer.music.load("fondo.mp3")
+#p.mixer.music.play(-1)
+canal1=p.mixer.Channel(0)
+canal2=p.mixer.Channel(1)
+#función que escribe cualquier texto
+def draw_txt(texto, font, color, surface, x, y):
+    textobj=font.render(texto, True, color)
+    textrect=textobj.get_rect()
+    textrect.topleft=( x, y)
+    surface.blit(textobj,textrect)
 #torretas
 for i in range(7):
     usable.append(False)
@@ -147,119 +170,179 @@ def Pause(a,color):
     cent=hola.get_rect(center=(int(1280/2),int(720/2)))
     pantalla.blit(hola,cent)
 pause=False
-Run=True
-while Run:
-    for event in p.event.get():
-        if event.type== p.QUIT:
-            Run=False
-        if event.type==p.KEYDOWN:
-            if event.key == p.K_s:
-                if not moverd:
-                    moverd = True
-            elif event.key == p.K_w:
-                if not movera:
-                    movera = True
-            elif event.key == p.K_a:
-                if not moverl:
-                    moverl = True
-            elif event.key == p.K_d:
-                if not moverr:
-                    moverr = True
-            elif event.key== p.K_RETURN:
-                est=mano.select()
-            elif event.key== p.K_BACKSPACE:
-                est1=mano.select()
-            elif event.key== p.K_ESCAPE:
-                pause=True
-    pantalla.blit(fondo,cfondo)
-    p.draw.rect(pantalla,(0,0,0),(75,150,1000,30))
-    p.draw.rect(pantalla,(50,50,50),(80,155,990,20))
-    p.draw.rect(pantalla,(143,49,255),(80,155,int(990*dinero/7000),20))
-    if dinero<7000:
-        dinero+=10
-    for l in range(1,7):#Cargar la recta morada, la de las luKs
-        p.draw.rect(pantalla,(0,0,0),(int(80+990*l/7),155,5,20))
-    for i in range(70):#cargar las celdas
-        if i%2!=0:
-            for j in range(7):#Cargar el menú
-                if (dinero-1000)/1000<j:
-                    pantalla.blit(menu[j+7],(mx[j],45))
-                    usable[j]=False#Decir qué torretas no son usables
-                else:
-                    usable[j]=True#Que torretas si lo son
-                    pantalla.blit(menu[j],(mx[j],45))                
-                if est[0]-65==mx[j] and est[1]==110:
-                    if usable[j]:
-                        turr=turrets[j]#Guardar las torretas usables en una variable
-                        nb=j#el tipo de bala
-                        vidturr=vida[j]#La vida todal de la torreta J
-            if a[i]!=0:
-                balas[i//2].mostrar(balimg[a[i-1]],True,a[i-1]) #Mostrar la bala si la torreta está puesta
-            celdas[i].mostrar(a[i],salud,sal[i])         
-        else:
-            if est[0]==celdas[i][0] and est[1]==celdas[i][1]:#Mostrar dónde seleccionó la mano
-                a[i+1]=turr#Definir la torreta de la casilla
-                a[i]=nb#El tipo de bala en la casilla
-                sal[i+1]=vidturr#La vida de la torreta de la casilla
-                if a[i]!=-1:
-                    dinero-=500#Si pone una torreta, la paga
-                    celdas[i+1]=celda(est[0],est[1],est[2])#Poner la torreta
-                est=(0,0,0)#Reiniciar la selección 
-            elif est1[0]==celdas[i][0] and est1[1]==celdas[i][1]:#Si quiere quitar la torreta, pues la quita :v
-                a[i+1]=0
-                a[i]=-1
-                celdas[i+1]=celda(est1[0],est1[1],True)
-                est1=(0,0,0)
-    #Mover la mano
-    if moverd:
-        yhand+=100
-        moverd=False
-    elif movera:
-        yhand-=100
-        movera=False
-    elif moverl:
-        xhand-=150
-        moverl=False
-    elif moverr:
-        xhand+=150
-        moverr=False
-    if yhand<=150:
-        angulo=90
-        yhand=150
-        mano=Hand(xhand+80,yhand)
-    elif yhand>650:
-        yhand=650
-    else:
-        mano=Hand(xhand,yhand)
-        angulo=0
-    if xhand<50:
-        xhand=50
-    elif xhand>950:
-        xhand=950
-    mano.mostrar(manoimg,0,0,angulo).cuadrado()
-    #Mostrar un alien en la mitad de la pantalla :v
-    if al<len(Alien1)-0.1:
-        al+=0.02
-        pantalla.blit(Alien1[int(al)],(1280/2,720/2))
-    else:
-        al=0
-    while pause:#La pausa :v
-        if cp<=500:
-            cp+=1
-        else:
-            cp=0
-        if cp<=250:
-            color=1
-        else:
-            color=0
-        Pause(Pausado,color)
+
+def game():
+    Run=True
+    while Run:
         for event in p.event.get():
             if event.type== p.QUIT:
-                pause=False
                 Run=False
-            if event.type == p.KEYDOWN:
-                if event.key == p.K_ESCAPE:
-                    if pause==True:
-                        pause=False
+            if event.type==p.KEYDOWN:
+                if event.key == p.K_s:
+                    if not moverd:
+                        moverd = True
+                elif event.key == p.K_w:
+                    if not movera:
+                        movera = True
+                elif event.key == p.K_a:
+                    if not moverl:
+                        moverl = True
+                elif event.key == p.K_d:
+                    if not moverr:
+                        moverr = True
+                elif event.key== p.K_RETURN:
+                    est=mano.select()
+                elif event.key== p.K_BACKSPACE:
+                    est1=mano.select()
+                elif event.key== p.K_ESCAPE:
+                    pause=True
+        pantalla.blit(fondo,cfondo)
+        p.draw.rect(pantalla,(0,0,0),(75,150,1000,30))
+        p.draw.rect(pantalla,(50,50,50),(80,155,990,20))
+        p.draw.rect(pantalla,(143,49,255),(80,155,int(990*dinero/7000),20))
+        if dinero<7000:
+            dinero+=10
+        for l in range(1,7):#Cargar la recta morada, la de las luKs
+            p.draw.rect(pantalla,(0,0,0),(int(80+990*l/7),155,5,20))
+        for i in range(70):#cargar las celdas
+            if i%2!=0:
+                for j in range(7):#Cargar el menú
+                    if (dinero-1000)/1000<j:
+                        pantalla.blit(menu[j+7],(mx[j],45))
+                        usable[j]=False#Decir qué torretas no son usables
+                    else:
+                        usable[j]=True#Que torretas si lo son
+                        pantalla.blit(menu[j],(mx[j],45))                
+                    if est[0]-65==mx[j] and est[1]==110:
+                        if usable[j]:
+                            turr=turrets[j]#Guardar las torretas usables en una variable
+                            nb=j#el tipo de bala
+                            vidturr=vida[j]#La vida todal de la torreta J
+                if a[i]!=0:
+                    balas[i//2].mostrar(balimg[a[i-1]],True,a[i-1]) #Mostrar la bala si la torreta está puesta
+                celdas[i].mostrar(a[i],salud,sal[i])         
+            else:
+                if est[0]==celdas[i][0] and est[1]==celdas[i][1]:#Mostrar dónde seleccionó la mano
+                    a[i+1]=turr#Definir la torreta de la casilla
+                    a[i]=nb#El tipo de bala en la casilla
+                    sal[i+1]=vidturr#La vida de la torreta de la casilla
+                    if a[i]!=-1:
+                        dinero-=500#Si pone una torreta, la paga
+                        celdas[i+1]=celda(est[0],est[1],est[2])#Poner la torreta
+                    est=(0,0,0)#Reiniciar la selección 
+                elif est1[0]==celdas[i][0] and est1[1]==celdas[i][1]:#Si quiere quitar la torreta, pues la quita :v
+                    a[i+1]=0
+                    a[i]=-1
+                    celdas[i+1]=celda(est1[0],est1[1],True)
+                    est1=(0,0,0)
+        #Mover la mano
+        if moverd:
+            yhand+=100
+            moverd=False
+        elif movera:
+            yhand-=100
+            movera=False
+        elif moverl:
+            xhand-=150
+            moverl=False
+        elif moverr:
+            xhand+=150
+            moverr=False
+        if yhand<=150:
+            angulo=90
+            yhand=150
+            mano=Hand(xhand+80,yhand)
+        elif yhand>650:
+            yhand=650
+        else:
+            mano=Hand(xhand,yhand)
+            angulo=0
+        if xhand<50:
+            xhand=50
+        elif xhand>950:
+            xhand=950
+        mano.mostrar(manoimg,0,0,angulo).cuadrado()
+        #Mostrar un alien en la mitad de la pantalla :v
+        if al<len(Alien1)-0.1:
+            al+=0.02
+            pantalla.blit(Alien1[int(al)],(1280/2,720/2))
+        else:
+            al=0
+        while pause:#La pausa :v
+            if cp<=500:
+                cp+=1
+            else:
+                cp=0
+            if cp<=250:
+                color=1
+            else:
+                color=0
+            Pause(Pausado,color)
+            for event in p.event.get():
+                if event.type== p.QUIT:
+                    pause=False
+                    Run=False
+                if event.type == p.KEYDOWN:
+                    if event.key == p.K_ESCAPE:
+                        if pause==True:
+                            pause=False
+            p.display.update()
         p.display.update()
-    p.display.update()
+def opciones():
+    running = True 
+    click=False
+    while running:
+        pantalla.blit(bg_image,(0,0))
+        draw_txt("opciones",font_1, (0,0,0),pantalla,343,83)
+        draw_txt("opciones",font_1, (255,255,255),pantalla,330,80)
+        mx,my=p.mouse.get_pos()
+        boton_b=pantalla.blit(back,(50,630))
+        if boton_b.collidepoint((mx,my)):
+            pantalla.blit(bg_image,boton_b,boton_b)
+            boton_b=pantalla.blit(back,(50,625))
+            canal1.play(tap)
+            if click:
+                running=False
+                main_menu()
+        for event in p.event.get():
+            if event.type==p.QUIT:
+                p.quit()
+                sys.exit()
+            elif event.type==p.KEYDOWN:
+                if event.key==p.K_ESCAPE:
+                    running==False
+                    main_menu()
+            elif event.type==p.MOUSEBUTTONDOWN:
+                if event.button==1 and boton_b.collidepoint((mx,my)):
+                    click=True
+        p.display.update()
+        clock.tick(60)
+def controles():
+    running = True 
+    click=False
+    while running:
+        pantalla.blit(bg_image,(0,0))
+        draw_txt("CONTROLES",font_1, (0,0,0),pantalla,343,83)
+        draw_txt("CONTROLES",font_1, (255,255,255),pantalla,330,80)
+        mx,my=p.mouse.get_pos()
+        boton_b=pantalla.blit(back,(50,630))
+        if boton_b.collidepoint((mx,my)):
+            pantalla.blit(bg_image,boton_b,boton_b)
+            boton_b=pantalla.blit(back,(50,625))
+            canal1.play(tap)
+            if click:
+                running=False
+                main_menu()
+        for event in p.event.get():
+            if event.type==p.QUIT:
+                p.quit()
+                sys.exit()
+            elif event.type==p.KEYDOWN:
+                if event.key==p.K_ESCAPE:
+                    running==False
+                    main_menu()
+            elif event.type==p.MOUSEBUTTONDOWN:
+                if event.button==1 and boton_b.collidepoint((mx,my)):
+                    click=True
+        p.display.update()
+        clock.tick(60)
