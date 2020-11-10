@@ -8,13 +8,16 @@ def game():
             self.salud=salud
             self.salud_total=salud_total
         def mostrar(self,img,i=0,di=0):
-            if isinstance(img,list):
-                centro=img[i//di].get_rect(center=(self.x,self.y))
-                pantalla.blit(img[i//di],centro)
+            if isinstance(img,int):
+                return self
             else:
-                centro=img.get_rect(center=(self.x,self.y))
-                pantalla.blit(img,centro)
-            return self
+                if isinstance(img,list):
+                    centro=img[i//di].get_rect(center=(self.x,self.y))
+                    pantalla.blit(img[i//di],centro)
+                else:
+                    centro=img.get_rect(center=(self.x,self.y))
+                    pantalla.blit(img,centro)
+                return self
         def vida(self):
             p.draw.rect(pantalla,(255,0,0),(self.x-40,self.y-50,80,10))
             p.draw.rect(pantalla,(0,255,0),(self.x-40,self.y-50,int(80*self.salud/self.salud_total),10))
@@ -89,21 +92,33 @@ def game():
             self.v=vida
             self.salud_total=salud_total
         def mostrar(self,img,i=0,di=0):
-            if isinstance(img,list):
-                centro=img[i//di].get_rect(center=(self.x,self.y))
-                pantalla.blit(img[i//di],centro)
+            if isinstance(img,int):
+                return self
             else:
-                centro=img.get_rect(center=(self.x,self.y))
-                pantalla.blit(img,centro)
-            return self
+                if isinstance(img,list):
+                    centro=img[i//di].get_rect(center=(self.x,self.y))
+                    pantalla.blit(img[i//di],centro)
+                else:
+                    centro=img.get_rect(center=(self.x,self.y))
+                    pantalla.blit(img,centro)
+                return self
         def vida(self):
             p.draw.rect(pantalla,(255,0,0),(self.x-40,self.y-50,80,10))
             p.draw.rect(pantalla,(0,255,0),(self.x-40,self.y-50,int(80*self.v/self.salud_total),10))
             return self
+        def colision(self,o1,o2):
+            if (o1.x-self.x)**2+(self.y-o1.y)**2<=50:
+                return True
+            else: 
+                return False
+            if o2.x-50<=self.x<=o2.x+50:
+                return True
+            else: 
+                return False
     #Inicio de declaración de variables
     p.init()
     angulo=0
-    salud=100
+    salud=[]
     dinero=0
     xhand,yhand=50,150
     est=(0,0,0)
@@ -119,6 +134,7 @@ def game():
     balimg=[]
     vida=[100,200,300,400,500,600,800]
     vidturr=0
+    vid=0
     #torretas
     for i in range(7):
         usable.append(False)
@@ -131,7 +147,7 @@ def game():
     sal=[]
     balas=[]
     nb=-1
-    turr=0
+    turr=-1
     #Mano
     manoimg=p.image.load("images\\Mano.png")
     for i in range(75,976,150):
@@ -218,22 +234,27 @@ def game():
                             turr=turrets[j]
                             nb=j
                             vidturr=vida[j]
-                if a[i]!=0:
+                            vid=vida[j]
+                if a[i]!=-1:
                     balas[i//2].mostrar(balimg[a[i-1]],True,a[i-1])
-                celdas[i].mostrar(a[i],salud,sal[i])         
+                celdas[i].mostrar(a[i],salud[i],sal[i])         
             else:
                 if est[0]==celdas[i][0] and est[1]==celdas[i][1]:
                     a[i+1]=turr
                     a[i]=nb
                     sal[i+1]=vidturr
-                    if a[i]!=-1:
-                        dinero-=500
+                    salud[i+1]=vid
+                    if a[i+1]!=-1 and a[i]!=-1:
+                        dinero-=(nb+1)*1000
                         celdas[i+1]=celda(est[0],est[1],est[2])
-                    turr=0
+                    vid=0
+                    nb=-1
+                    turr=-1
                     est=(0,0,0)
                 elif est1[0]==celdas[i][0] and est1[1]==celdas[i][1]:
-                    a[i+1]=0
+                    a[i+1]=-1
                     a[i]=-1
+                    salud[i+1]=0
                     celdas[i+1]=celda(est1[0],est1[1],True)
                     est1=(0,0,0)
         #Mover la mano
