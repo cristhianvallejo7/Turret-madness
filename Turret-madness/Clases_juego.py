@@ -309,13 +309,12 @@ def game():
             al1=0
        #este pedazo se encarga de mostrar los enemigos caminando
        enemigos=[]
-       bool0,bool1,bool2,bool3=True,True,True,True
-        for i in range(4):
+       for i in range(4):
             enemigos.append(enemigo(X[i],Y[i],200,300))
             if X[i]<=0:
                 X[i]=1280
                 Y[i]=240+r.randint(0,4)*100
-            if eval("bool"+str(i)):
+            if vel[i]!=0:
                 enemigos[i].mostrar(eval("Alien"+str(i+1)+"[int(al)]")).vida()       
         #este pedazo se encarga de las colisiones
         for j in range(4):   
@@ -326,16 +325,12 @@ def game():
                             vel[j]=0
                             if j == 1:
                                 en2.mostrar(Alien1attack[int(al1)]).vida()
-                                bool1=False
                             if j == 0:
                                 en1.mostrar(Alien2attack[int(al1)]).vida()
-                                bool2=False
                             if j == 2:
                                 en3.mostrar(Alien3attack[int(al1)]).vida()
-                                bool3=False
                             if j == 3:
                                 en4.mostrar(Alien4attack[int(al1)]).vida()
-                                bool4=False
                         else:
                             vel[j]=2
             X[j]-=vel[j]   
