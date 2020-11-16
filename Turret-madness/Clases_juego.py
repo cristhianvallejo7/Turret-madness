@@ -155,6 +155,8 @@ def game():
     manoimg=p.image.load("images\\Mano.png")
     for i in range(75,976,150):
         for j in range(210,611,100):
+            salud.append(0)
+            salud.append(0)
             balas.append(bala(i+50,j+30,0))
             sal.append(0)
             sal.append(0)
