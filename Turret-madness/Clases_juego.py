@@ -89,7 +89,8 @@ def game():
                 PP=Torreta(self.x+40,self.y+40,salud,salud_total)
                 PP.mostrar(img).vida()
             return self
-    def __init__(self,x,y,vida,salud_total):
+    class enemigo:
+        def __init__(self,x,y,vida,salud_total):
             self.x=x
             self.y=y
             self.v=vida
