@@ -1,6 +1,7 @@
 import pygame as p
 import random as r
 import sys
+import math as m
 def game():
     class Torreta:
         def __init__(self,x,y,salud,salud_total=1):
@@ -30,7 +31,7 @@ def game():
             self.y=y
             self.y2=y
             self.tipo=n
-        def mostrar(self,img,a,l,colision=False):
+        def mostrar(self,img,a,l,colision1=False):
             if l==0 or l==6:
                 velbal=0
             elif l==1:
@@ -50,6 +51,8 @@ def game():
                 centro=img.get_rect(center=(int(self.x),int(self.y)))
                 pantalla.blit(img,centro)
             else:
+                self.x=self.x2
+            if colision1:
                 self.x=self.x2
             return self
     class Hand:
@@ -103,9 +106,18 @@ def game():
                     centro=img.get_rect(center=(self.x,self.y))
                     pantalla.blit(img,centro)
                 return self
-        def vida(self):
-            p.draw.rect(pantalla,(255,0,0),(self.x-40,self.y-50,80,10))
-            p.draw.rect(pantalla,(0,255,0),(self.x-40,self.y-50,int(80*self.v/self.salud_total),10))
+        def colision1(self,kk,mm):
+            if ((self.x-kk)**2+(self.y-mm)**2)<=30**2:
+                return True
+            else:
+                return False
+        def vida(self,daño=0):
+            self.v=200-daño
+            p.draw.rect(pantalla,(255,0,0),(self.x-40,self.y-50,80,10)) 
+            if self.v>0:
+                p.draw.rect(pantalla,(0,255,0),(self.x-40,self.y-50,int(80*self.v/self.salud_total),10))
+            else:
+                p.draw.rect(pantalla,(0,255,0),(self.x-40,self.y-50,0,10))
             return self
         def colision(self,o1,o2):
             if (o1.x-self.x)**2+(self.y-o1.y)**2<=50:
@@ -119,6 +131,10 @@ def game():
     #Inicio de declaración de variables
     p.init()
     angulo=0
+    daño1=0
+    daño2=0
+    daño3=0
+    daño4=0
     salud=[]
     dinero=0
     xhand,yhand=50,150
@@ -206,6 +222,14 @@ def game():
     pause=False
     Run=True
     while Run:
+        for i in range(4):
+            enemigos.append(enemigo(X[i],Y[i],100,200))
+            if X[i]<=0:
+                X[i]=1280
+                Y[i]=240+r.randint(0,4)*100
+            if vel[i]!=0:
+                X[i]-=vel[i]
+                enemigos[i].mostrar(eval("Alien"+str(i+1)+"[int(al)]")).vida(0)
         for event in p.event.get():
             if event.type== p.QUIT:
                 Run=False
@@ -255,6 +279,43 @@ def game():
                             vid=vida[j]
                 if a[i]!=-1:
                     balas[i//2].mostrar(balimg[a[i-1]],True,a[i-1])
+                    if enemigos[0].colision1(balas[i//2].x,balas[i//2].y):
+                        balas[i//2].mostrar(balimg[a[i-1]],False,a[i-1],True)
+                        daño1+=6
+                        enemigos[0].vida(daño1)
+                        if daño1>=200:
+                            X[0]=1280
+                            Y[0]=240+r.randint(0,4)*100
+                            daño1=0
+                            enemigos[0]=enemigos(X[0],Y[0],200,300)
+                            #en1,en2,en3,en4=enemigo(x1,y1,200,300),enemigo(x2,y2,200,300),enemigo(x3,y3,200,300),enemigo(x4,y4,200,300)
+                    if enemigos[1].colision1(balas[i//2].x,balas[i//2].y):
+                        balas[i//2].mostrar(balimg[a[i-1]],False,a[i-1],True)
+                        daño2+=7
+                        enemigos[1].vida(daño2)
+                        if daño2>=200:
+                            X[1]=1280
+                            Y[1]=240+r.randint(0,4)*100
+                            daño2=0
+                            enemigos[1]=enemigos(X[1],Y[1],200,300)
+                    if enemigos[2].colision1(balas[i//2].x,balas[i//2].y):
+                        balas[i//2].mostrar(balimg[a[i-1]],False,a[i-1],True)
+                        daño3+=5
+                        enemigos[2].vida(daño3)
+                        if daño3>=200:
+                            X[2]=1280
+                            Y[2]=240+r.randint(0,4)*100
+                            daño3=0
+                            enemigos[2]=enemigos(X[2],Y[2],200,300)
+                    if enemigos[3].colision1(balas[i//2].x,balas[i//2].y):
+                        balas[i//2].mostrar(balimg[a[i-1]],False,a[i-1],True)
+                        daño4+=5
+                        enemigos[3].vida(daño4)
+                        if daño4>=200:
+                            X[3]=1280
+                            Y[3]=240+r.randint(0,4)*100
+                            daño4=0
+                            enemigos[3]=enemigos(X[3],Y[3],200,300)
                 celdas[i].mostrar(a[i],salud[i],sal[i])         
             else:
                 if est[0]==celdas[i][0] and est[1]==celdas[i][1]:
@@ -313,7 +374,7 @@ def game():
         #este pedazo se encarga de mostrar los enemigos caminando
         enemigos=[]
         for i in range(4):
-            enemigos.append(enemigo(X[i],Y[i],100,200))
+            enemigos.append(enemigos(X[i],Y[i],100,200))
             if X[i]<=0:
                 X[i]=1280
                 Y[i]=240+r.randint(0,4)*100
@@ -337,7 +398,27 @@ def game():
                                 enemigos[3].mostrar(Alien4attack[int(al1)]).vida()
                         else:
                             vel[j]=2
-            X[j]-=vel[j]    
+            X[j]-=vel[j]
+        if X[1]<=0:
+            X[1]=1280
+            Y[1]=240+r.randint(0,4)*100
+            enemigos[1]=enemigos(X[1],Y[1],200,300)
+        if X[0]<=0:
+            X[0]=1280
+            Y[0]=240+r.randint(0,4)*100
+            enemigos[0]=enemigos(X[0],Y[0],200,300)
+        if X[2]<=0:
+            X[2]=1280
+            Y[2]=240+r.randint(0,4)*100
+            enemigos[2]=enemigos(X[2],Y[2],200,300)
+        if X[3]<=0:
+            X[3]=1280
+            Y[3]=240+r.randint(0,4)*100
+            enemigos[3]=enemigos(X[3],Y[0],200,300)
+        enemigos[0].mostrar(Alien1[int(al)]).vida(daño1)            
+        enemigos[1].mostrar(Alien2[int(al)]).vida(daño2)
+        enemigos[2].mostrar(Alien3[int(al)]).vida(daño3)
+        enemigos[3].mostrar(Alien4[int(al)]).vida(daño4)
         #pausa
         while pause:
             if cp<=500:
@@ -359,3 +440,4 @@ def game():
                             pause=False
             p.display.update()
         p.display.update()
+game()
