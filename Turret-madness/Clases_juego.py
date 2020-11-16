@@ -405,6 +405,7 @@ def game():
                 if event.type== p.QUIT:
                     pause=False
                     Run=False
+                    sys.exit()
                 if event.type == p.KEYDOWN:
                     if event.key == p.K_ESCAPE:
                         if pause==True:
