@@ -175,10 +175,11 @@ def game():
     Alien2attack=[]
     Alien3attack=[]
     Alien4attack=[]
-    X=[]
-    Y=[]
+    vel=[]
     enemigos=[]
     al,al1=0,0
+    X=[]
+    Y=[]
     for i in range(4,11):
         Alien1attack.append(p.image.load("images\\Alien1"+str(i)+".png").convert_alpha())
         Alien2attack.append(p.image.load("images\\Alien2"+str(i)+".png").convert_alpha())
@@ -190,6 +191,8 @@ def game():
         Alien3.append(p.image.load("images\\Alien3"+str(i)+".png").convert_alpha())
         Alien4.append(p.image.load("images\\Alien4"+str(i)+".png").convert_alpha())
         vel.append(2)
+        X.append(1280)
+        Y.append(240+r.randint(0,4)*100)
     #Pausa
     font=p.font.Font("Fuentes\\raidercrusadersemistraight.ttf",32)
     cp=0
@@ -307,33 +310,34 @@ def game():
             al1+=0.3
         else:
             al1=0
-       #este pedazo se encarga de mostrar los enemigos caminando
-       enemigos=[]
-       for i in range(4):
-            enemigos.append(enemigo(X[i],Y[i],200,300))
+        #este pedazo se encarga de mostrar los enemigos caminando
+        enemigos=[]
+        for i in range(4):
+            enemigos.append(enemigo(X[i],Y[i],100,200))
             if X[i]<=0:
                 X[i]=1280
                 Y[i]=240+r.randint(0,4)*100
             if vel[i]!=0:
+                X[i]-=vel[i]
                 enemigos[i].mostrar(eval("Alien"+str(i+1)+"[int(al)]")).vida()       
         #este pedazo se encarga de las colisiones
         for j in range(4):   
             for i in range(6,-1,-1):
                 for k in range(1,10,2):
-                    if m.sqrt((eval("x"+str(j))-(185+i*150))**2+(eval("y"+str(j))-(celdas[int(str(i)+str(k))-1][1]))**2)<40:
+                    if m.sqrt((eval("X"+str([j]))-(185+i*150))**2+(eval("Y"+str([j]))-(celdas[int(str(i)+str(k))-1][1]))**2)<40:
                         if not celdas[int(str(i)+str(k))].state:
                             vel[j]=0
                             if j == 1:
-                                en2.mostrar(Alien1attack[int(al1)]).vida()
+                                enemigos[0].mostrar(Alien1attack[int(al1)]).vida()
                             if j == 0:
-                                en1.mostrar(Alien2attack[int(al1)]).vida()
+                                enemigos[1].mostrar(Alien2attack[int(al1)]).vida()
                             if j == 2:
-                                en3.mostrar(Alien3attack[int(al1)]).vida()
+                                enemigos[2].mostrar(Alien3attack[int(al1)]).vida()
                             if j == 3:
-                                en4.mostrar(Alien4attack[int(al1)]).vida()
+                                enemigos[3].mostrar(Alien4attack[int(al1)]).vida()
                         else:
                             vel[j]=2
-            X[j]-=vel[j]   
+            X[j]-=vel[j]    
         #pausa
         while pause:
             if cp<=500:
