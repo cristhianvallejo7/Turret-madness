@@ -212,25 +212,42 @@ def game():
         Alien3.append(p.image.load("images\\Alien3"+str(i)+".png").convert_alpha())
         Alien4.append(p.image.load("images\\Alien4"+str(i)+".png").convert_alpha())
 
-    for i in range(8): #Esta variable controla el número de enemigos en el tablero
+    for i in range(7): #Esta variable controla el spawn de enemigos y ratio
         vidaenemigo.append(200)
         vidaenemigototal.append(200)
-        n=r.randint(1,4)
+        n=2
         N.append(n)
-        if n==1:
-            Aliens.append(Alien1)
-            vel.append(2)
-        elif n==2:
-            Aliens.append(Alien2)
-            vel.append(3)
-        elif n==3:
-            Aliens.append(Alien3)
-            vel.append(1)
-        else:
-            Aliens.append(Alien4)
-            vel.append(2.5)
-        X.append(1280+i*100)
+        Aliens.append(Alien2)
+        vel.append(5)
+        X.append(1280+i*1400)
         Y.append(240+r.randint(0,4)*100)
+    for i in range(8):
+        vidaenemigo.append(100)
+        vidaenemigototal.append(100)
+        n = 1
+        N.append(n)
+        Aliens.append(Alien1)
+        vel.append(5)
+        X.append(2200 + i * 1200)
+        Y.append(240 + r.randint(0, 4) * 100)
+    for i in range(4):
+        vidaenemigo.append(200)
+        vidaenemigototal.append(200)
+        n=2
+        N.append(n)
+        Aliens.append(Alien2)
+        vel.append(5)
+        X.append(4280+i*1200)
+        Y.append(240+r.randint(0,4)*100)
+    for i in range(6):
+        vidaenemigo.append(100)
+        vidaenemigototal.append(100)
+        n = 1
+        N.append(n)
+        Aliens.append(Alien1)
+        vel.append(5)
+        X.append(5000 + i * 1200)
+        Y.append(240 + r.randint(0, 4) * 100)
 
     #Pausa
     font=p.font.Font("Fuentes\\raidercrusadersemistraight.ttf",32)
@@ -423,8 +440,11 @@ def game():
                                 enemigos[j].mostrar(Alien3attack[int(al1)]).vida()
                             if N[j] == 4:
                                 enemigos[j].mostrar(Alien4attack[int(al1)]).vida()
-                        else:
-                            vel[j]=2
+                        else:#controla la velocidad
+                            if X[i] <= 1500 and N[i] == 1:
+                                vel[j] = 5
+                            if X[i] <= 1500 and N[i] == 2:
+                                vel[j] = 3
             X[j]-=vel[j] 
 
         #pausa
