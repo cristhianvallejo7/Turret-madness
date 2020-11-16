@@ -31,7 +31,7 @@ def game():
             self.y=y
             self.y2=y
             self.tipo=n
-        def mostrar(self,img,a,l,colision=False):
+        def mostrar(self,img,a,l,colision1=False):
             if l==0 or l==6:
                 velbal=0
             elif l==1:
@@ -51,6 +51,8 @@ def game():
                 centro=img.get_rect(center=(int(self.x),int(self.y)))
                 pantalla.blit(img,centro)
             else:
+                self.x=self.x2
+            if colision1:
                 self.x=self.x2
             return self
     class Hand:
