@@ -348,8 +348,6 @@ def game():
         #este pedazo se encarga de mostrar los enemigos caminando
         enemigos=[]
         for i in range(len(Aliens)):
-            if vidaenemigo[i]>0:
-                vidaenemigo[i]-=1
             if vidaenemigo[i]==0:
                 X[i]=1280
                 Y[i]=240+r.randint(0,4)*100
