@@ -390,8 +390,8 @@ def game():
             al+=0.3
         else:
             al=0
-        if al1<len(Alien1attack)-0.3:
-            al1+=0.3
+        if al1<len(Alien1attack)-0.15:
+            al1+=0.15
         else:
             al1=0
         #este pedazo se encarga de mostrar los enemigos caminando
