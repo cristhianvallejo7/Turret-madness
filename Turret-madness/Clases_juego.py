@@ -131,6 +131,7 @@ def game():
          
     #Inicio de declaración de variables
     p.init()
+    daño1,daño2,daño3,daño4=0,0,0,0
     angulo=0
     salud=[]
     dinero=7000
@@ -300,7 +301,7 @@ def game():
                             nb=j
                             vidturr=vida[j]
                             vid=vida[j]
-                if a[i]!=0:
+                if a[i]!=-1:
                     balas[i//2].mostrar(balimg[a[i-1]],True,a[i-1])
                     if enemigos[0].colision1(balas[i//2].x,balas[i//2].y):
                         balas[i//2].mostrar(balimg[a[i-1]],False,a[i-1],True)
