@@ -31,7 +31,7 @@ def game():
             self.y=y
             self.y2=y
             self.tipo=n
-        def mostrar(self,img,a,l,colision=False):
+        def mostrar(self,img,a,l,colision1=False):
             if l==0 or l==6:
                 velbal=0
             elif l==1:
@@ -51,6 +51,8 @@ def game():
                 centro=img.get_rect(center=(int(self.x),int(self.y)))
                 pantalla.blit(img,centro)
             else:
+                self.x=self.x2
+            if colision1:
                 self.x=self.x2
             return self
     class Hand:
@@ -233,14 +235,6 @@ def game():
     pause=False
     Run=True
     while Run:
-        for i in range(4):
-            enemigos.append(enemigo(X[i],Y[i],100,200))
-            if X[i]<=0:
-                X[i]=1280
-                Y[i]=240+r.randint(0,4)*100
-            if vel[i]!=0:
-                X[i]-=vel[i]
-                enemigos[i].mostrar(eval("Alien"+str(i+1)+"[int(al)]")).vida(0)
         for event in p.event.get():
             if event.type== p.QUIT:
                 Run=False
