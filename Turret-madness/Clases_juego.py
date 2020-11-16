@@ -121,7 +121,7 @@ def game():
     p.init()
     angulo=0
     salud=[]
-    dinero=0
+    dinero=7000
     xhand,yhand=50,150
     est=(0,0,0)
     est1=(0,0,0)
@@ -161,17 +161,18 @@ def game():
             sal.append(0)
             sal.append(0)
             a.append(-1)
-            a.append(0)
+            a.append(-1)
             celdas.append((i,j))
             celdas.append(celda(i,j,True))
+
     #Menú
     menu=[]
     mx=[90,240,390,540,690,840,990]
     for i in range(14):
         menu.append(p.image.load("images\\MenuT"+str(i)+".png"))
+
     #Aliens
     Aliens=[]
-    N=[]
     Alien1=[]
     Alien2=[]
     Alien3=[]
@@ -182,9 +183,12 @@ def game():
     Alien4attack=[]
     vel=[]
     enemigos=[]
+    vidaenemigo=[]
+    vidaenemigototal=[]
     al,al1=0,0
     X=[]
     Y=[]
+    N=[]
     for i in range(4,11):
         Alien1attack.append(p.image.load("images\\Alien1"+str(i)+".png").convert_alpha())
         Alien2attack.append(p.image.load("images\\Alien2"+str(i)+".png").convert_alpha())
@@ -195,20 +199,27 @@ def game():
         Alien2.append(p.image.load("images\\Alien2"+str(i)+".png").convert_alpha())
         Alien3.append(p.image.load("images\\Alien3"+str(i)+".png").convert_alpha())
         Alien4.append(p.image.load("images\\Alien4"+str(i)+".png").convert_alpha())
-    for i in range(6): #Esta variable controla el número de enemigos en el tablero
+
+    for i in range(8): #Esta variable controla el número de enemigos en el tablero
+        vidaenemigo.append(200)
+        vidaenemigototal.append(200)
         n=r.randint(1,4)
         N.append(n)
         if n==1:
             Aliens.append(Alien1)
+            vel.append(2)
         elif n==2:
             Aliens.append(Alien2)
+            vel.append(3)
         elif n==3:
             Aliens.append(Alien3)
+            vel.append(1)
         else:
             Aliens.append(Alien4)
-        vel.append(2)
+            vel.append(2.5)
         X.append(1280+i*100)
         Y.append(240+r.randint(0,4)*100)
+
     #Pausa
     font=p.font.Font("Fuentes\\raidercrusadersemistraight.ttf",32)
     cp=0
@@ -251,7 +262,7 @@ def game():
         p.draw.rect(pantalla,(50,50,50),(80,155,990,20))
         p.draw.rect(pantalla,(143,49,255),(80,155,int(990*dinero/7000),20))
         if dinero<7000:
-            dinero+=10
+            dinero+=20
         for l in range(1,7):
             p.draw.rect(pantalla,(0,0,0),(int(80+990*l/7),155,5,20))
         for i in range(70):
@@ -329,9 +340,15 @@ def game():
         #este pedazo se encarga de mostrar los enemigos caminando
         enemigos=[]
         for i in range(len(Aliens)):
-            enemigos.append(enemigo(X[i],Y[i],100,200))
-            if X[i]<=0:
+            if vidaenemigo[i]>0:
+                vidaenemigo[i]-=1
+            if vidaenemigo[i]==0:
                 X[i]=1280
+                Y[i]=240+r.randint(0,4)*100
+                vidaenemigo[i]=200
+            enemigos.append(enemigo(X[i],Y[i],vidaenemigo[i],vidaenemigototal[i]))
+            if X[i]<=0:
+                X[i]=1280+r.randint(0,len(Aliens))*100
                 Y[i]=240+r.randint(0,4)*100
             if vel[i]!=0:
                 X[i]-=vel[i]
@@ -353,7 +370,8 @@ def game():
                                 enemigos[j].mostrar(Alien4attack[int(al1)]).vida()
                         else:
                             vel[j]=2
-            X[j]-=vel[j]    
+            X[j]-=vel[j] 
+
         #pausa
         while pause:
             if cp<=500:
