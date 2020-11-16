@@ -87,8 +87,7 @@ def game():
                 PP=Torreta(self.x+40,self.y+40,salud,salud_total)
                 PP.mostrar(img).vida()
             return self
-    class enemigo:
-        def __init__(self,x,y,vida,salud_total):
+    def __init__(self,x,y,vida,salud_total):
             self.x=x
             self.y=y
             self.v=vida
@@ -104,9 +103,18 @@ def game():
                     centro=img.get_rect(center=(self.x,self.y))
                     pantalla.blit(img,centro)
                 return self
-        def vida(self):
-            p.draw.rect(pantalla,(255,0,0),(self.x-40,self.y-50,80,10))
-            p.draw.rect(pantalla,(0,255,0),(self.x-40,self.y-50,int(80*self.v/self.salud_total),10))
+        def colision1(self,kk,mm):
+            if ((self.x-kk)**2+(self.y-mm)**2)<=30**2:
+                return True
+            else:
+                return False
+        def vida(self,daño=0):
+            self.v=200-daño
+            p.draw.rect(pantalla,(255,0,0),(self.x-40,self.y-50,80,10)) 
+            if self.v>0:
+                p.draw.rect(pantalla,(0,255,0),(self.x-40,self.y-50,int(80*self.v/self.salud_total),10))
+            else:
+                p.draw.rect(pantalla,(0,255,0),(self.x-40,self.y-50,0,10))
             return self
         def colision(self,o1,o2):
             if (o1.x-self.x)**2+(self.y-o1.y)**2<=50:
@@ -117,6 +125,7 @@ def game():
                 return True
             else: 
                 return False
+         
     #Inicio de declaración de variables
     p.init()
     angulo=0
