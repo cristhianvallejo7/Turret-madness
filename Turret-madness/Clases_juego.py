@@ -2,6 +2,7 @@ import pygame as p
 import random as r
 import sys
 import math as m
+import numpy as np
 def game():
     class Torreta:
         def __init__(self,x,y,salud,salud_total=1):
@@ -131,6 +132,7 @@ def game():
     #Inicio de declaración de variables
     p.init()
     daño=[]
+    clock=p.time.Clock()
     angulo=0
     salud=[]
     dinero=7000
@@ -146,7 +148,8 @@ def game():
     turrets=[]
     usable=[]
     balimg=[]
-    vida=[100,200,300,400,500,600,800]
+    vida=[1000,200,300,400,500,600,800]
+    daño_enemigos=[1,2,3,4]
     vidturr=0
     vid=0
     a=[]
@@ -217,7 +220,6 @@ def game():
         vidaenemigototal.append(200)
         n=2
         N.append(n)
-        daño.append(0)
         Aliens.append(Alien2)
         vel.append(5)
         X.append(1280+i*1400)
@@ -225,7 +227,6 @@ def game():
     for i in range(8):
         vidaenemigo.append(150)
         vidaenemigototal.append(150)
-        daño.append(0)
         n = 1
         N.append(n)
         Aliens.append(Alien1)
@@ -235,7 +236,6 @@ def game():
     for i in range(4):
         vidaenemigo.append(200)
         vidaenemigototal.append(200)
-        daño.append(0)
         n=2
         N.append(n)
         Aliens.append(Alien2)
@@ -243,7 +243,6 @@ def game():
         X.append(4280+i*1200)
         Y.append(240+r.randint(0,4)*100)
     for i in range(6):
-        daño.append(0)
         vidaenemigo.append(150)
         vidaenemigototal.append(150)
         n = 1
@@ -252,7 +251,7 @@ def game():
         vel.append(5)
         X.append(5000 + i * 1200)
         Y.append(240 + r.randint(0, 4) * 100)
-        
+    daño=np.zeros(len(N))
     #Nucleo
     pilar,cpilar=p.image.load("images\\Nucleo\\Pilar.png"),[]
     esfera=[]
@@ -261,16 +260,12 @@ def game():
     yn=[]
     xn=[]
     vn=[]
-    countnucleo,countndest=0,[]
-    destruir=[]
+    countnucleo=0
     cnucleo=[]
     for i in range(8):
-        if i<5:
-            destruir.append(p.image.load("images\\Nucleo\\D"+str(i)+".png"))
         nucleoimg.append(p.image.load("images\\Nucleo\\"+str(i)+".png"))
         esfera.append(p.image.load("images\\Nucleo\\E"+str(i)+".png"))
     for i in range(5):
-        countndest.append(0)
         estadonucleo.append(0)
         xn.append(40)
         vn.append(5)
@@ -374,6 +369,12 @@ def game():
                     salud[i+1]=0
                     celdas[i+1]=celda(est1[0],est1[1],True)
                     est1=(0,0,0)
+                if celdas[i+1].state :
+                    a[i+1]=-1
+                    a[i]=-1
+                    salud[i+1]=0
+                    celdas[i+1]=celda(celdas[i][0],celdas[i][1],True)
+                    
         
         #Nucleo
         if countnucleo<len(nucleoimg)-0.4:
@@ -392,24 +393,16 @@ def game():
                     if abs(xn[i]-X[k])<40 and yn[i]==Y[k]:
                         X[k]=1280+r.randint(0,len(Aliens))*100
                         Y[k]=240+r.randint(0,4)*100
-                    if X[k]<20:
+                    if X[k]<40:
                         estadonucleo[i]=2
                 pantalla.blit(pilar,cpilar[i])
-                if xn[i]<1240:
+                if xn[i]<1280:
                     xn[i]+=vn[i]
                     pantalla.blit(esfera[int(countnucleo)],cnucleo[i])
                 else:
-                    if countndest[i]<len(destruir)-0.2:
-                        if xn[i]!=5000:
-                            if countndest[i]<0.9:
-                                countndest[i]+=0.1
-                            else:
-                                countndest[i]+=0.2
-                            pantalla.blit(destruir[int(countndest[i])],cnucleo[i])
-                    else:
-                        xn[i],yn[i]=5000,5000
+                    xn[i]=5000
+                    yn[i]=5000
             if estadonucleo[i]==2:
-                pantalla.blit(pilar,cpilar[i])
                 print("Game over")
         
         #Mover la mano
@@ -462,7 +455,7 @@ def game():
             if vel[i]!=0:
                 X[i]-=vel[i]
                 enemigos[i].mostrar(eval("Aliens["+str(i)+"][int(al)]")).vida() 
-            
+                
         #este pedazo se encarga de las colisiones
         for j in range(len(Aliens)):   
             for i in range(6,-1,-1):
@@ -471,22 +464,39 @@ def game():
                         if not celdas[int(str(i)+str(k))].state:
                             vel[j]=0
                             if N[j] == 1:
-                                enemigos[j].mostrar(Alien1attack[int(al1)]).vida(vidaenemigo[N[j]])
+                                enemigos[j].mostrar(Alien1attack[int(al1)]).vida()
+                                if salud[int(str(i)+str(k))]>=0:
+                                    salud[int(str(i)+str(k))]-=daño_enemigos[N[j]-1]
+                                else:
+                                    salud[int(str(i)+str(k))]=0
+                                    celdas[int(str(i)+str(k))].state=True
                             if N[j] == 2:
-                                enemigos[j].mostrar(Alien2attack[int(al1)]).vida(vidaenemigo[N[j]])
+                                enemigos[j].mostrar(Alien2attack[int(al1)]).vida()
+                                if salud[int(str(i)+str(k))]>=0:
+                                    salud[int(str(i)+str(k))]-=daño_enemigos[N[j]-1]
+                                else:
+                                    salud[int(str(i)+str(k))]=0
+                                    celdas[int(str(i)+str(k))].state=True
                             if N[j] == 3:
-                                enemigos[j].mostrar(Alien3attack[int(al1)]).vida(vidaenemigo[N[j]])
+                                enemigos[j].mostrar(Alien3attack[int(al1)]).vida()
+                                if salud[int(str(i)+str(k))]>=0:
+                                    salud[int(str(i)+str(k))]-=daño_enemigos[N[j]-1]
+                                else:
+                                    salud[int(str(i)+str(k))]=0
+                                    celdas[int(str(i)+str(k))].state=True
                             if N[j] == 4:
-                                enemigos[j].mostrar(Alien4attack[int(al1)]).vida(vidaenemigo[N[j]])
+                                enemigos[j].mostrar(Alien4attack[int(al1)]).vida()
+                                if salud[int(str(i)+str(k))]>=0: 
+                                    salud[int(str(i)+str(k))]-=daño_enemigos[N[j]-1]
+                                else:
+                                    salud[int(str(i)+str(k))]=0
+                                    celdas[int(str(i)+str(k))].state=True
+                            PP=Torreta(celdas[int(str(i)+str(k))-1][0]+40,celdas[int(str(i)+str(k))-1][1]+40,salud[int(str(i)+str(k))],vida[a[int(str(i)+str(k))-1]])
+                            PP.mostrar(turrets[a[int(str(i)+str(k))-1]]).vida()
                         else:
-                            if X[i] <= 1500 and N[i] == 1:
-                                vel[j] = 5
-                            if X[i] <= 1500 and N[i] == 2:
-                                vel[j] = 3
-                            if N[j]==1:
-                                vel[j]=1
-                            elif N[j]==2:
-                                vel[j]=3
+                            vel[j]=2
+            X[j]-=vel[j]         
+        
         #pausa
         while pause:
             if cp<=500:
@@ -507,4 +517,5 @@ def game():
                         if pause==True:
                             pause=False
             p.display.update()
+        clock.tick(60)
         p.display.update()
