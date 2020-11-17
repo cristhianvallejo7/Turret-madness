@@ -204,6 +204,7 @@ def game():
     X=[]
     Y=[]
     N=[]
+    countenemigos=[]
     for i in range(4,11):
         Alien1attack.append(p.image.load("images\\Alien1"+str(i)+".png").convert_alpha())
         Alien2attack.append(p.image.load("images\\Alien2"+str(i)+".png").convert_alpha())
@@ -215,7 +216,7 @@ def game():
         Alien3.append(p.image.load("images\\Alien3"+str(i)+".png").convert_alpha())
         Alien4.append(p.image.load("images\\Alien4"+str(i)+".png").convert_alpha())
 
-    for i in range(7): #Esta variable controla el número de enemigos en el tablero
+        for i in range(7): #Esta variable controla el número de enemigos en el tablero
         vidaenemigo.append(200)
         vidaenemigototal.append(200)
         n=2
@@ -224,6 +225,7 @@ def game():
         vel.append(5)
         X.append(1280+i*1400)
         Y.append(240+r.randint(0,4)*100)
+        countenemigos.append(0)
     for i in range(8):
         vidaenemigo.append(150)
         vidaenemigototal.append(150)
@@ -233,6 +235,7 @@ def game():
         vel.append(5)
         X.append(2200 + i * 1200)
         Y.append(240 + r.randint(0, 4) * 100)
+        countenemigos.append(0)
     for i in range(4):
         vidaenemigo.append(200)
         vidaenemigototal.append(200)
@@ -242,6 +245,7 @@ def game():
         vel.append(5)
         X.append(4280+i*1200)
         Y.append(240+r.randint(0,4)*100)
+        countenemigos.append(0)
     for i in range(6):
         vidaenemigo.append(150)
         vidaenemigototal.append(150)
@@ -251,6 +255,7 @@ def game():
         vel.append(5)
         X.append(5000 + i * 1200)
         Y.append(240 + r.randint(0, 4) * 100)
+        countenemigos.append(0)
     daño=np.zeros(len(N))
     
     #Nucleo
@@ -347,10 +352,11 @@ def game():
                             balas[i//2].mostrar(balimg[a[i-1]],False,a[i-1],True)
                             daño[h]+=10
                             if daño[h]>=vidaenemigototal[h]:
-                                X[h]=1280
-                                Y[h]=2400+r.randint(0,4)*100
+                                X[h]=5000
+                                Y[h]=5000
                                 daño[h]=0
-                                enemigos[h]=enemigo(X[h],Y[h],200,300) 
+                                countenemigos[h]=1
+                                enemigos[h]=enemigo(X[h],Y[h],200,300)
                 celdas[i].mostrar(a[i],salud[i],sal[i])
             else:
                 if est[0]==celdas[i][0] and est[1]==celdas[i][1]:
@@ -458,17 +464,15 @@ def game():
         #este pedazo se encarga de mostrar los enemigos caminando
         enemigos=[]
         for i in range(len(Aliens)):
-            if vidaenemigo[i]==0:
-                X[i]=1280
-                Y[i]=240+r.randint(0,4)*100
-                vidaenemigo[i]=200
             enemigos.append(enemigo(X[i],Y[i],vidaenemigo[i]-daño[i],vidaenemigototal[i]))
             if X[i]<=0:
                 X[i]=1280+r.randint(0,len(Aliens))*100
                 Y[i]=240+r.randint(0,4)*100
             if vel[i]!=0:
                 X[i]-=vel[i]
-                enemigos[i].mostrar(eval("Aliens["+str(i)+"][int(al)]")).vida() 
+                enemigos[i].mostrar(eval("Aliens["+str(i)+"][int(al)]")).vida()
+        if countenemigos.count(1)==len(N):
+            print("Ganó")
                 
         #este pedazo se encarga de las colisiones
         for j in range(len(Aliens)):   
@@ -508,7 +512,14 @@ def game():
                             PP=Torreta(celdas[int(str(i)+str(k))-1][0]+40,celdas[int(str(i)+str(k))-1][1]+40,salud[int(str(i)+str(k))],vida[a[int(str(i)+str(k))-1]])
                             PP.mostrar(turrets[a[int(str(i)+str(k))-1]]).vida()
                         else:
-                            vel[j]=2
+                            if X[j] <= 1500 and N[i] == 1:
+                                vel[j] = 5
+                            elif X[j] <= 1500 and N[i] == 2:
+                                vel[j] = 3
+                            if N[j]==1:
+                                vel[j] = 5
+                            elif N[j]==2:
+                                vel[j] = 3
             X[j]-=vel[j]         
         
         #pausa
