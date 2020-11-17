@@ -392,7 +392,7 @@ def game():
                     if abs(xn[i]-X[k])<40 and yn[i]==Y[k]:
                         X[k]=1280+r.randint(0,len(Aliens))*100
                         Y[k]=240+r.randint(0,4)*100
-                    if X[k]<40:
+                    if X[k]<20:
                         estadonucleo[i]=2
                 pantalla.blit(pilar,cpilar[i])
                 if xn[i]<1240:
