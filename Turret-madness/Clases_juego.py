@@ -252,6 +252,7 @@ def game():
         X.append(5000 + i * 1200)
         Y.append(240 + r.randint(0, 4) * 100)
     daño=np.zeros(len(N))
+    
     #Nucleo
     pilar,cpilar=p.image.load("images\\Nucleo\\Pilar.png"),[]
     esfera=[]
@@ -260,15 +261,19 @@ def game():
     yn=[]
     xn=[]
     vn=[]
-    countnucleo=0
+    countnucleo,countndest=0,[]
+    destruir=[]
     cnucleo=[]
     for i in range(8):
+        if i<5:
+            destruir.append(p.image.load("images\\Nucleo\\D"+str(i)+".png"))
         nucleoimg.append(p.image.load("images\\Nucleo\\"+str(i)+".png"))
         esfera.append(p.image.load("images\\Nucleo\\E"+str(i)+".png"))
     for i in range(5):
+        countndest.append(0)
         estadonucleo.append(0)
         xn.append(40)
-        vn.append(5)
+        vn.append(10)
         yn.append(240+i*100)
         cpilar.append(nucleoimg[i].get_rect(center=(xn[i],yn[i])))
         cnucleo.append(nucleoimg[i].get_rect(center=(xn[i],yn[i])))
@@ -393,17 +398,26 @@ def game():
                     if abs(xn[i]-X[k])<40 and yn[i]==Y[k]:
                         X[k]=1280+r.randint(0,len(Aliens))*100
                         Y[k]=240+r.randint(0,4)*100
-                    if X[k]<40:
+                    if X[k]<20:
                         estadonucleo[i]=2
                 pantalla.blit(pilar,cpilar[i])
-                if xn[i]<1280:
+                if xn[i]<1240:
                     xn[i]+=vn[i]
                     pantalla.blit(esfera[int(countnucleo)],cnucleo[i])
                 else:
-                    xn[i]=5000
-                    yn[i]=5000
+                    if countndest[i]<len(destruir)-0.2:
+                        if xn[i]!=5000:
+                            if countndest[i]<0.9:
+                                countndest[i]+=0.1
+                            else:
+                                countndest[i]+=0.2
+                            pantalla.blit(destruir[int(countndest[i])],cnucleo[i])
+                    else:
+                        xn[i],yn[i]=5000,5000
             if estadonucleo[i]==2:
+                pantalla.blit(pilar,cpilar[i])
                 print("Game over")
+                estadonucleo[i]=3
         
         #Mover la mano
         if moverd:
