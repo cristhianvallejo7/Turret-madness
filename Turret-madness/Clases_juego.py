@@ -112,7 +112,6 @@ def game():
             else:
                 return False
         def vida(self,daño=0):
-            self.v=200-daño
             p.draw.rect(pantalla,(255,0,0),(self.x-40,self.y-50,80,10)) 
             if self.v>0:
                 p.draw.rect(pantalla,(0,255,0),(self.x-40,self.y-50,int(80*self.v/self.salud_total),10))
@@ -131,7 +130,7 @@ def game():
          
     #Inicio de declaración de variables
     p.init()
-    daño1,daño2,daño3,daño4=0,0,0,0
+    daño=[]=0,0,0,0
     angulo=0
     salud=[]
     dinero=7000
@@ -216,6 +215,7 @@ def game():
     for i in range(8): #Esta variable controla el número de enemigos en el tablero
         vidaenemigo.append(200)
         vidaenemigototal.append(200)
+        daño.append(10)
         n=r.randint(1,4)
         N.append(n)
         if n==1:
