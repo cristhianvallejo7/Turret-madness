@@ -267,14 +267,6 @@ def game():
     pause=False
     Run=True
     while Run:
-        for i in range(4):
-            enemigos.append(enemigo(X[i],Y[i],100,200))
-            if X[i]<=0:
-                X[i]=1280
-                Y[i]=240+r.randint(0,4)*100
-            if vel[i]!=0:
-                X[i]-=vel[i]
-                enemigos[i].mostrar(eval("Alien"+str(i+1)+"[int(al)]")).vida(0)
         for event in p.event.get():
             if event.type== p.QUIT:
                 Run=False
@@ -326,7 +318,16 @@ def game():
                             vid=vida[j]   
                 if a[i]!=-1:
                     balas[i//2].mostrar(balimg[a[i-1]],True,a[i-1])
-                celdas[i].mostrar(a[i],salud[i],sal[i])         
+                    for h in range(len(N)): 
+                        if enemigos[h].colision1(balas[i//2].x,balas[i//2].y):
+                            balas[i//2].mostrar(balimg[a[i-1]],False,a[i-1],True)
+                            daño[h]+=10
+                            if daño[h]>=vidaenemigototal[h]:
+                                X[h]=1280
+                                Y[h]=2400+r.randint(0,4)*100
+                                daño[h]=0
+                                enemigos[h]=enemigo(X[h],Y[h],200,300) 
+                celdas[i].mostrar(a[i],salud[i],sal[i])
             else:
                 if est[0]==celdas[i][0] and est[1]==celdas[i][1]:
                     if celdas[i+1].state:
