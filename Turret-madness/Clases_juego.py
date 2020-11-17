@@ -112,7 +112,6 @@ def game():
             else:
                 return False
         def vida(self,daño=0):
-            self.v=200-daño
             p.draw.rect(pantalla,(255,0,0),(self.x-40,self.y-50,80,10)) 
             if self.v>0:
                 p.draw.rect(pantalla,(0,255,0),(self.x-40,self.y-50,int(80*self.v/self.salud_total),10))
@@ -131,7 +130,7 @@ def game():
          
     #Inicio de declaración de variables
     p.init()
-    daño1,daño2,daño3,daño4=0,0,0,0
+    daño=[]
     angulo=0
     salud=[]
     dinero=7000
@@ -216,6 +215,7 @@ def game():
     for i in range(8): #Esta variable controla el número de enemigos en el tablero
         vidaenemigo.append(200)
         vidaenemigototal.append(200)
+        daño.append(10)
         n=r.randint(1,4)
         N.append(n)
         if n==1:
@@ -246,14 +246,6 @@ def game():
     pause=False
     Run=True
     while Run:
-        for i in range(4):
-            enemigos.append(enemigo(X[i],Y[i],100,200))
-            if X[i]<=0:
-                X[i]=1280
-                Y[i]=240+r.randint(0,4)*100
-            if vel[i]!=0:
-                X[i]-=vel[i]
-                enemigos[i].mostrar(eval("Alien"+str(i+1)+"[int(al)]")).vida(0)
         for event in p.event.get():
             if event.type== p.QUIT:
                 Run=False
@@ -303,44 +295,18 @@ def game():
                             vid=vida[j]
                 if a[i]!=-1:
                     balas[i//2].mostrar(balimg[a[i-1]],True,a[i-1])
-                    if enemigos[0].colision1(balas[i//2].x,balas[i//2].y):
-                        balas[i//2].mostrar(balimg[a[i-1]],False,a[i-1],True)
-                        daño1+=6
-                        enemigos[0].vida(daño1)
-                        if daño1>=200:
-                            X[0]=1280
-                            Y[0]=240+r.randint(0,4)*100
-                            daño1=0
-                            enemigos[0]=enemigo(X[0],Y[0],200,300)
+                    for h in range(len(N)): 
+                        if enemigos[h].colision1(balas[i//2].x,balas[i//2].y):
+                            balas[i//2].mostrar(balimg[a[i-1]],False,a[i-1],True)
+                            daño[h]+=10
+                            if daño[h]>=vidaenemigototal[h]:
+                                X[h]=1280
+                                Y[h]=2400+r.randint(0,4)*100
+                                daño[h]=0
+                                enemigos[h]=enemigo(X[h],Y[h],200,300)
                             #en1,en2,en3,en4=enemigo(x1,y1,200,300),enemigo(x2,y2,200,300),enemigo(x3,y3,200,300),enemigo(x4,y4,200,300)
-                    if enemigos[1].colision1(balas[i//2].x,balas[i//2].y):
-                        balas[i//2].mostrar(balimg[a[i-1]],False,a[i-1],True)
-                        daño2+=7
-                        enemigos[1].vida(daño2)
-                        if daño2>=200:
-                            X[1]=1280
-                            Y[1]=240+r.randint(0,4)*100
-                            daño2=0
-                            enemigos[1]=enemigo(X[1],Y[1],200,300)
-                    if enemigos[2].colision1(balas[i//2].x,balas[i//2].y):
-                        balas[i//2].mostrar(balimg[a[i-1]],False,a[i-1],True)
-                        daño3+=5
-                        enemigos[2].vida(daño3)
-                        if daño3>=200:
-                            X[2]=1280
-                            Y[2]=240+r.randint(0,4)*100
-                            daño3=0
-                            enemigos[2]=enemigo(X[2],Y[2],200,300)
-                    if enemigos[3].colision1(balas[i//2].x,balas[i//2].y):
-                        balas[i//2].mostrar(balimg[a[i-1]],False,a[i-1],True)
-                        daño4+=5
-                        enemigos[3].vida(daño4)
-                        if daño4>=200:
-                            X[3]=1280
-                            Y[3]=240+r.randint(0,4)*100
-                            daño4=0
-                            enemigos[3]=enemigo(X[3],Y[3],200,300)
-                celdas[i].mostrar(a[i],salud[i],sal[i])         
+                celdas[i].mostrar(a[i],salud[i],sal[i])  
+        
             else:
                 if est[0]==celdas[i][0] and est[1]==celdas[i][1]:
                     a[i+1]=turr
