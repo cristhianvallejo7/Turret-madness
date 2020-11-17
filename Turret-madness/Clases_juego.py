@@ -217,7 +217,7 @@ def game():
         vidaenemigototal.append(200)
         n=2
         N.append(n)
-        daño.append(10)
+        daño.append(0)
         Aliens.append(Alien2)
         vel.append(5)
         X.append(1280+i*1400)
