@@ -260,16 +260,16 @@ def game():
                 p.quit()
                 sys.exit()
             if event.type==p.KEYDOWN:
-                if event.key == p.K_s:
+                if event.key == p.K_s or event.key == p.K_DOWN:
                     if not moverd:
                         moverd = True
-                elif event.key == p.K_w:
+                elif event.key == p.K_w or event.key == p.K_UP:
                     if not movera:
                         movera = True
-                elif event.key == p.K_a:
+                elif event.key == p.K_a or event.key == p.K_LEFT:
                     if not moverl:
                         moverl = True
-                elif event.key == p.K_d:
+                elif event.key == p.K_d or event.key == p.K_RIGHT:
                     if not moverr:
                         moverr = True
                 elif event.key== p.K_RETURN:
