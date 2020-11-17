@@ -216,7 +216,7 @@ def game():
         Alien3.append(p.image.load("images\\Alien3"+str(i)+".png").convert_alpha())
         Alien4.append(p.image.load("images\\Alien4"+str(i)+".png").convert_alpha())
 
-        for i in range(7): #Esta variable controla el número de enemigos en el tablero
+    for i in range(7): #Esta variable controla el número de enemigos en el tablero
         vidaenemigo.append(200)
         vidaenemigototal.append(200)
         n=2
