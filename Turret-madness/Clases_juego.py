@@ -423,7 +423,7 @@ def game():
                 X[i]=1280
                 Y[i]=240+r.randint(0,4)*100
                 vidaenemigo[i]=200
-            enemigos.append(enemigo(X[i],Y[i],vidaenemigo[i],vidaenemigototal[i]))
+            enemigos.append(enemigo(X[i],Y[i],vidaenemigo[i]-daño[i],vidaenemigototal[i]))
             if X[i]<=0:
                 X[i]=1280+r.randint(0,len(Aliens))*100
                 Y[i]=240+r.randint(0,4)*100
@@ -439,17 +439,21 @@ def game():
                         if not celdas[int(str(i)+str(k))].state:
                             vel[j]=0
                             if N[j] == 1:
-                                enemigos[j].mostrar(Alien1attack[int(al1)]).vida()
+                                enemigos[j].mostrar(Alien1attack[int(al1)]).vida(vidaenemigo[N[j]])
                             if N[j] == 2:
-                                enemigos[j].mostrar(Alien2attack[int(al1)]).vida()
+                                enemigos[j].mostrar(Alien2attack[int(al1)]).vida(vidaenemigo[N[j]])
                             if N[j] == 3:
-                                enemigos[j].mostrar(Alien3attack[int(al1)]).vida()
+                                enemigos[j].mostrar(Alien3attack[int(al1)]).vida(vidaenemigo[N[j]])
                             if N[j] == 4:
-                                enemigos[j].mostrar(Alien4attack[int(al1)]).vida()
+                                enemigos[j].mostrar(Alien4attack[int(al1)]).vida(vidaenemigo[N[j]])
                         else:
                             vel[j]=2
             X[j]-=vel[j] 
-
+        for z in range(len(N)):
+            if X[z]<=0:
+                X[z]=1280
+                Y[z]=240+r.randint(0,4)*100
+        
         #pausa
         while pause:
             if cp<=500:
