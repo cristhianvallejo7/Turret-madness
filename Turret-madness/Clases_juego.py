@@ -471,7 +471,7 @@ def game():
                                 vel[j] = 5
                             if X[i] <= 1500 and N[i] == 2:
                                 vel[j] = 3    
-             X[j]-=vel[j] 
+            X[j]-=vel[j] 
         #pausa
         while pause:
             if cp<=500:
