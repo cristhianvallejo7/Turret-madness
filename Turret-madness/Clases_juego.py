@@ -225,6 +225,7 @@ def game():
     for i in range(8):
         vidaenemigo.append(150)
         vidaenemigototal.append(150)
+        daño.append(0)
         n = 1
         N.append(n)
         Aliens.append(Alien1)
@@ -234,6 +235,7 @@ def game():
     for i in range(4):
         vidaenemigo.append(200)
         vidaenemigototal.append(200)
+        daño.append(0)
         n=2
         N.append(n)
         Aliens.append(Alien2)
@@ -241,6 +243,7 @@ def game():
         X.append(4280+i*1200)
         Y.append(240+r.randint(0,4)*100)
     for i in range(6):
+        daño.append(0)
         vidaenemigo.append(150)
         vidaenemigototal.append(150)
         n = 1
@@ -467,13 +470,7 @@ def game():
                             if X[i] <= 1500 and N[i] == 1:
                                 vel[j] = 5
                             if X[i] <= 1500 and N[i] == 2:
-                                vel[j] = 3
-            X[j]-=vel[j] 
-        for z in range(len(N)):
-            if X[z]<=0:
-                X[z]=1280
-                Y[z]=240+r.randint(0,4)*100
-        
+                                vel[j] = 3        
         #pausa
         while pause:
             if cp<=500:
