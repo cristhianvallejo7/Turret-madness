@@ -140,7 +140,7 @@ def game():
     est1=(0,0,0)
     pantalla=p.display.set_mode((1280,720))
     p.display.set_caption("Turret Madness")
-    fondo=p.image.load("images\\Fondo.png").convert()
+    fondo=p.image.load("images\\Fondo1.png").convert()
     cfondo=fondo.get_rect(center=(int(1280/2),int(720/2)))
     moverd,movera,moverr,moverl=False,False,False,False
     celdas=[]
@@ -232,6 +232,27 @@ def game():
             vel.append(2.5)
         X.append(1280+i*100)
         Y.append(240+r.randint(0,4)*100)
+        
+    #Nucleo
+    pilar,cpilar=p.image.load("images\\Nucleo\\Pilar.png"),[]
+    esfera=[]
+    estadonucleo=[]
+    nucleoimg=[]
+    yn=[]
+    xn=[]
+    vn=[]
+    countnucleo=0
+    cnucleo=[]
+    for i in range(8):
+        nucleoimg.append(p.image.load("images\\Nucleo\\"+str(i)+".png"))
+        esfera.append(p.image.load("images\\Nucleo\\E"+str(i)+".png"))
+    for i in range(5):
+        estadonucleo.append(0)
+        xn.append(40)
+        vn.append(5)
+        yn.append(240+i*100)
+        cpilar.append(nucleoimg[i].get_rect(center=(xn[i],yn[i])))
+        cnucleo.append(nucleoimg[i].get_rect(center=(xn[i],yn[i])))
 
     #Pausa
     font=p.font.Font("Fuentes\\raidercrusadersemistraight.ttf",32)
@@ -286,6 +307,8 @@ def game():
             dinero+=20
         for l in range(1,7):
             p.draw.rect(pantalla,(0,0,0),(int(80+990*l/7),155,5,20))
+        
+        #Celdas y menú
         for i in range(70):
             if i%2!=0:
                 for j in range(7):
@@ -294,65 +317,31 @@ def game():
                         usable[j]=False
                     else:
                         usable[j]=True
-                        pantalla.blit(menu[j],(mx[j],45))                
+                        pantalla.blit(menu[j],(mx[j],45))            
                     if est[0]-65==mx[j] and est[1]==110:
                         if usable[j]:
                             turr=turrets[j]
                             nb=j
                             vidturr=vida[j]
-                            vid=vida[j]
+                            vid=vida[j]   
                 if a[i]!=-1:
                     balas[i//2].mostrar(balimg[a[i-1]],True,a[i-1])
-                    if enemigos[0].colision1(balas[i//2].x,balas[i//2].y):
-                        balas[i//2].mostrar(balimg[a[i-1]],False,a[i-1],True)
-                        daño1+=6
-                        enemigos[0].vida(daño1)
-                        if daño1>=200:
-                            X[0]=1280
-                            Y[0]=240+r.randint(0,4)*100
-                            daño1=0
-                            enemigos[0]=enemigo(X[0],Y[0],200,300)
-                            #en1,en2,en3,en4=enemigo(x1,y1,200,300),enemigo(x2,y2,200,300),enemigo(x3,y3,200,300),enemigo(x4,y4,200,300)
-                    if enemigos[1].colision1(balas[i//2].x,balas[i//2].y):
-                        balas[i//2].mostrar(balimg[a[i-1]],False,a[i-1],True)
-                        daño2+=7
-                        enemigos[1].vida(daño2)
-                        if daño2>=200:
-                            X[1]=1280
-                            Y[1]=240+r.randint(0,4)*100
-                            daño2=0
-                            enemigos[1]=enemigo(X[1],Y[1],200,300)
-                    if enemigos[2].colision1(balas[i//2].x,balas[i//2].y):
-                        balas[i//2].mostrar(balimg[a[i-1]],False,a[i-1],True)
-                        daño3+=5
-                        enemigos[2].vida(daño3)
-                        if daño3>=200:
-                            X[2]=1280
-                            Y[2]=240+r.randint(0,4)*100
-                            daño3=0
-                            enemigos[2]=enemigo(X[2],Y[2],200,300)
-                    if enemigos[3].colision1(balas[i//2].x,balas[i//2].y):
-                        balas[i//2].mostrar(balimg[a[i-1]],False,a[i-1],True)
-                        daño4+=5
-                        enemigos[3].vida(daño4)
-                        if daño4>=200:
-                            X[3]=1280
-                            Y[3]=240+r.randint(0,4)*100
-                            daño4=0
-                            enemigos[3]=enemigo(X[3],Y[3],200,300)
                 celdas[i].mostrar(a[i],salud[i],sal[i])         
             else:
                 if est[0]==celdas[i][0] and est[1]==celdas[i][1]:
-                    a[i+1]=turr
-                    a[i]=nb
-                    sal[i+1]=vidturr
-                    salud[i+1]=vid
+                    if celdas[i+1].state:
+                        a[i+1]=turr
+                        a[i]=nb
+                        sal[i+1]=vidturr
+                        salud[i+1]=vid
                     if a[i+1]!=-1 and a[i]!=-1:
-                        dinero-=(nb+1)*1000
-                        celdas[i+1]=celda(est[0],est[1],est[2])
-                    vid=0
-                    nb=-1
-                    turr=-1
+                        if not usable[nb]:
+                            vid=0
+                            nb=-1
+                            turr=-1
+                        if celdas[i+1].state:
+                            dinero-=(nb+1)*1000
+                            celdas[i+1]=celda(est[0],est[1],est[2])
                     est=(0,0,0)
                 elif est1[0]==celdas[i][0] and est1[1]==celdas[i][1]:
                     a[i+1]=-1
@@ -360,6 +349,36 @@ def game():
                     salud[i+1]=0
                     celdas[i+1]=celda(est1[0],est1[1],True)
                     est1=(0,0,0)
+        
+        #Nucleo
+        if countnucleo<len(nucleoimg)-0.4:
+            countnucleo+=0.4
+        else:
+            countnucleo=0
+        for i in range(5):
+            cnucleo[i]=nucleoimg[i].get_rect(center=(xn[i],yn[i]))
+            if estadonucleo[i]==0:
+                pantalla.blit(nucleoimg[int(countnucleo)],cnucleo[i])
+                for k in range(len(Aliens)):
+                    if abs(xn[i]-X[k])<40 and yn[i]==Y[k]:
+                        estadonucleo[i]=1
+            if estadonucleo[i]==1:
+                for k in range(len(Aliens)):
+                    if abs(xn[i]-X[k])<40 and yn[i]==Y[k]:
+                        X[k]=1280+r.randint(0,len(Aliens))*100
+                        Y[k]=240+r.randint(0,4)*100
+                    if X[k]<40:
+                        estadonucleo[i]=2
+                pantalla.blit(pilar,cpilar[i])
+                if xn[i]<1280:
+                    xn[i]+=vn[i]
+                    pantalla.blit(esfera[int(countnucleo)],cnucleo[i])
+                else:
+                    xn[i]=5000
+                    yn[i]=5000
+            if estadonucleo[i]==2:
+                print("Game over")
+        
         #Mover la mano
         if moverd:
             yhand+=100
