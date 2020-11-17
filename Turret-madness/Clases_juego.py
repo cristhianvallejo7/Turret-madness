@@ -450,7 +450,7 @@ def game():
             if vel[i]!=0:
                 X[i]-=vel[i]
                 enemigos[i].mostrar(eval("Aliens["+str(i)+"][int(al)]")).vida() 
-                
+            
         #este pedazo se encarga de las colisiones
         for j in range(len(Aliens)):   
             for i in range(6,-1,-1):
@@ -470,7 +470,8 @@ def game():
                             if X[i] <= 1500 and N[i] == 1:
                                 vel[j] = 5
                             if X[i] <= 1500 and N[i] == 2:
-                                vel[j] = 3        
+                                vel[j] = 3    
+             X[j]-=vel[j] 
         #pausa
         while pause:
             if cp<=500:
