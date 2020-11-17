@@ -261,12 +261,16 @@ def game():
     yn=[]
     xn=[]
     vn=[]
-    countnucleo=0
+    countnucleo,countndest=0,[]
+    destruir=[]
     cnucleo=[]
     for i in range(8):
+        if i<5:
+            destruir.append(p.image.load("images\\Nucleo\\D"+str(i)+".png"))
         nucleoimg.append(p.image.load("images\\Nucleo\\"+str(i)+".png"))
         esfera.append(p.image.load("images\\Nucleo\\E"+str(i)+".png"))
     for i in range(5):
+        countndest.append(0)
         estadonucleo.append(0)
         xn.append(40)
         vn.append(5)
@@ -391,13 +395,21 @@ def game():
                     if X[k]<40:
                         estadonucleo[i]=2
                 pantalla.blit(pilar,cpilar[i])
-                if xn[i]<1280:
+                if xn[i]<1240:
                     xn[i]+=vn[i]
                     pantalla.blit(esfera[int(countnucleo)],cnucleo[i])
                 else:
-                    xn[i]=5000
-                    yn[i]=5000
+                    if countndest[i]<len(destruir)-0.2:
+                        if xn[i]!=5000:
+                            if countndest[i]<0.9:
+                                countndest[i]+=0.1
+                            else:
+                                countndest[i]+=0.2
+                            pantalla.blit(destruir[int(countndest[i])],cnucleo[i])
+                    else:
+                        xn[i],yn[i]=5000,5000
             if estadonucleo[i]==2:
+                pantalla.blit(pilar,cpilar[i])
                 print("Game over")
         
         #Mover la mano
@@ -470,8 +482,11 @@ def game():
                             if X[i] <= 1500 and N[i] == 1:
                                 vel[j] = 5
                             if X[i] <= 1500 and N[i] == 2:
-                                vel[j] = 3    
-            X[j]-=vel[j] 
+                                vel[j] = 3
+                            if N[j]==1:
+                                vel[j]=1
+                            elif N[j]==2:
+                                vel[j]=3
         #pausa
         while pause:
             if cp<=500:
