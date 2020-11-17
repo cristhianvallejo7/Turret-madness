@@ -212,26 +212,42 @@ def game():
         Alien3.append(p.image.load("images\\Alien3"+str(i)+".png").convert_alpha())
         Alien4.append(p.image.load("images\\Alien4"+str(i)+".png").convert_alpha())
 
-    for i in range(8): #Esta variable controla el número de enemigos en el tablero
+    for i in range(7): #Esta variable controla el número de enemigos en el tablero
         vidaenemigo.append(200)
         vidaenemigototal.append(200)
-        n=r.randint(1,4)
+        n=2
         N.append(n)
-        daño.append(10)
-        if n==1:
-            Aliens.append(Alien1)
-            vel.append(2)
-        elif n==2:
-            Aliens.append(Alien2)
-            vel.append(3)
-        elif n==3:
-            Aliens.append(Alien3)
-            vel.append(1)
-        else:
-            Aliens.append(Alien4)
-            vel.append(2.5)
-        X.append(1280+i*100)
+        Aliens.append(Alien2)
+        vel.append(5)
+        X.append(1280+i*1400)
         Y.append(240+r.randint(0,4)*100)
+    for i in range(8):
+        vidaenemigo.append(150)
+        vidaenemigototal.append(150)
+        n = 1
+        N.append(n)
+        Aliens.append(Alien1)
+        vel.append(5)
+        X.append(2200 + i * 1200)
+        Y.append(240 + r.randint(0, 4) * 100)
+    for i in range(4):
+        vidaenemigo.append(200)
+        vidaenemigototal.append(200)
+        n=2
+        N.append(n)
+        Aliens.append(Alien2)
+        vel.append(5)
+        X.append(4280+i*1200)
+        Y.append(240+r.randint(0,4)*100)
+    for i in range(6):
+        vidaenemigo.append(150)
+        vidaenemigototal.append(150)
+        n = 1
+        N.append(n)
+        Aliens.append(Alien1)
+        vel.append(5)
+        X.append(5000 + i * 1200)
+        Y.append(240 + r.randint(0, 4) * 100)
         
     #Nucleo
     pilar,cpilar=p.image.load("images\\Nucleo\\Pilar.png"),[]
@@ -447,7 +463,10 @@ def game():
                             if N[j] == 4:
                                 enemigos[j].mostrar(Alien4attack[int(al1)]).vida(vidaenemigo[N[j]])
                         else:
-                            vel[j]=2
+                            if X[i] <= 1500 and N[i] == 1:
+                                vel[j] = 5
+                            if X[i] <= 1500 and N[i] == 2:
+                                vel[j] = 3
             X[j]-=vel[j] 
         for z in range(len(N)):
             if X[z]<=0:
