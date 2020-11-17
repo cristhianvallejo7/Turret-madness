@@ -414,6 +414,7 @@ def game():
             al1+=0.15
         else:
             al1=0
+            
         #este pedazo se encarga de mostrar los enemigos caminando
         enemigos=[]
         for i in range(len(Aliens)):
@@ -427,7 +428,8 @@ def game():
                 Y[i]=240+r.randint(0,4)*100
             if vel[i]!=0:
                 X[i]-=vel[i]
-                enemigos[i].mostrar(eval("Aliens["+str(i)+"][int(al)]")).vida()       
+                enemigos[i].mostrar(eval("Aliens["+str(i)+"][int(al)]")).vida() 
+                
         #este pedazo se encarga de las colisiones
         for j in range(len(Aliens)):   
             for i in range(6,-1,-1):
@@ -446,26 +448,6 @@ def game():
                         else:
                             vel[j]=2
             X[j]-=vel[j] 
-        if X[1]<=0:
-            X[1]=1280
-            Y[1]=240+r.randint(0,4)*100
-            enemigos[1]=enemigo(X[1],Y[1],200,300)
-        if X[0]<=0:
-            X[0]=1280
-            Y[0]=240+r.randint(0,4)*100
-            enemigos[0]=enemigo(X[0],Y[0],200,300)
-        if X[2]<=0:
-            X[2]=1280
-            Y[2]=240+r.randint(0,4)*100
-            enemigos[2]=enemigo(X[2],Y[2],200,300)
-        if X[3]<=0:
-            X[3]=1280
-            Y[3]=240+r.randint(0,4)*100
-            enemigos[3]=enemigo(X[3],Y[3],200,300)
-        enemigos[0].mostrar(Alien1[int(al)]).vida(daño1)            
-        enemigos[1].mostrar(Alien2[int(al)]).vida(daño2)
-        enemigos[2].mostrar(Alien3[int(al)]).vida(daño3)
-        enemigos[3].mostrar(Alien4[int(al)]).vida(daño4)
 
         #pausa
         while pause:
