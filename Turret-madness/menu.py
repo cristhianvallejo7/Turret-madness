@@ -17,9 +17,9 @@ boton=p.image.load("images\\boton.png")
 back=p.image.load("images\\flecha-regresar.png")
 select=p.mixer.Sound('efectos\\sonido_boton.wav')
 tap=p.mixer.Sound('efectos\\boton_tap.wav')
-#p.mixer.music.load("effectos\\fondo.wav")
-#p.mixer.music.play(-1)
-#p.mixer.music.set_volume(0.2)
+p.mixer.music.load("effectos\\fondo.wav")
+p.mixer.music.play(-1)
+p.mixer.music.set_volume(0.2)
 canal1=p.mixer.Channel(0)
 canal2=p.mixer.Channel(1)
 
@@ -38,13 +38,12 @@ def main_menu():
     pos=540,300
     k,k1,k2=0,0,0
     while running:
-        if boton_1==None and boton_2==None and boton_3==None: 
-            pantalla.blit(bg_image,(0,0))
-            draw_txt("TURRET",font_2, (0,0,0),pantalla,385,65)
-            draw_txt("TURRET",font_2, (255,255,255),pantalla,372,50)
-            draw_txt("MADNESS",font_1, (0,0,0),pantalla,381,185)
-            draw_txt("MADNESS",font_1, (255,255,255),pantalla,368,170)
-        else:
+        pantalla.blit(bg_image,(0,0))
+        draw_txt("TURRET",font_2, (0,0,0),pantalla,335,65)
+        draw_txt("TURRET",font_2, (255,255,255),pantalla,332,50)
+        draw_txt("MADNESS",font_1, (0,0,0),pantalla,381,185)
+        draw_txt("MADNESS",font_1, (255,255,255),pantalla,368,170)
+        if not(boton_1==None or boton_2==None or boton_3==None): 
             pantalla.blit(bg_image,boton_1,boton_1)
             pantalla.blit(bg_image,boton_2,boton_2)       
             pantalla.blit(bg_image,boton_3,boton_3)
