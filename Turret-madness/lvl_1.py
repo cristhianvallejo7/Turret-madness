@@ -1,9 +1,18 @@
 import pygame as p
+from pygame import mixer
 import random as r
 import sys
 import math as m
 import numpy as np
 def game():
+    Save=open("Save.txt","r")
+    state1=Save.readline()
+    st1=Save.readline()
+    state2=Save.readline()
+    st2=Save.readline()
+    state3=Save.readline()
+    st3=Save.readline()
+    Save.close()
     class Torreta:
         def __init__(self,x,y,salud,salud_total=1):
             self.x=int(x)
@@ -131,11 +140,25 @@ def game():
          
     #Inicio de declaración de variables
     p.init()
+    p.display.set_caption("Tower-Madness")
+    mixer.init()
+    Aliensound=mixer.Sound("Sound\\Aliens.wav")
+    soundselect=mixer.Sound("Sound\\select.wav")
+    soundmano=mixer.Sound("Sound\\hand.wav")
+    pausesound=mixer.Sound("Sound\\message.ogg")
+    mixer.music.load("Sound\\alienblues.wav")
+    mixer.music.set_volume(0.5)
+    mixer.music.play(-1)
+    canalAliens=mixer.Channel(0)
+    canalAliens.play(Aliensound,-1)
+    canalselect=mixer.Channel(1)
+    canalmano=mixer.Channel(2)
+    canalpause=mixer.Channel(3)
     daño=[]
     clock=p.time.Clock()
     angulo=0
     salud=[]
-    dinero=7000
+    dinero=3000
     xhand,yhand=50,150
     est=(0,0,0)
     est1=(0,0,0)
@@ -283,6 +306,9 @@ def game():
         cpilar.append(nucleoimg[i].get_rect(center=(xn[i],yn[i])))
         cnucleo.append(nucleoimg[i].get_rect(center=(xn[i],yn[i])))
 
+    #Guartado
+    save=False
+
     #Pausa
     font=p.font.Font("Fuentes\\raidercrusadersemistraight.ttf",32)
     cp=0
@@ -316,16 +342,18 @@ def game():
                         moverr = True
                 elif event.key== p.K_RETURN:
                     est=mano.select()
+                    canalselect.play(soundselect)
                 elif event.key== p.K_BACKSPACE:
                     est1=mano.select()
                 elif event.key== p.K_ESCAPE:
+                    canalpause.play(pausesound)
                     pause=True
         pantalla.blit(fondo,cfondo)
         p.draw.rect(pantalla,(0,0,0),(75,150,1000,30))
         p.draw.rect(pantalla,(50,50,50),(80,155,990,20))
         p.draw.rect(pantalla,(143,49,255),(80,155,int(990*dinero/7000),20))
-        if dinero<7000:
-            dinero+=20
+        if dinero<3000:
+            dinero+=50
         for l in range(1,7):
             p.draw.rect(pantalla,(0,0,0),(int(80+990*l/7),155,5,20))
         
@@ -356,7 +384,6 @@ def game():
                                 Y[h]=5000
                                 daño[h]=0
                                 countenemigos[h]=1
-                                enemigos[h]=enemigo(X[h],Y[h],200,300)
                 celdas[i].mostrar(a[i],salud[i],sal[i])
             else:
                 if est[0]==celdas[i][0] and est[1]==celdas[i][1]:
@@ -424,7 +451,8 @@ def game():
                 pantalla.blit(pilar,cpilar[i])
                 print("Game over")
                 estadonucleo[i]=3
-        
+        if movera or moverd or moverl or moverr:
+            canalmano.play(soundmano)
         #Mover la mano
         if moverd:
             yhand+=100
@@ -472,8 +500,25 @@ def game():
                 X[i]-=vel[i]
                 enemigos[i].mostrar(eval("Aliens["+str(i)+"][int(al)]")).vida()
         if countenemigos.count(1)==len(N):
+            countenemigos[0]=0
             print("Ganó")
-                
+            save=True
+        
+        #Guardado
+        if save:
+            stars=estadonucleo.count(0)
+            Save=open("Save.txt","w")
+            Save.close()
+            Save=open("Save.txt","a")
+            Save.write("Completado\n")
+            Save.write(str(stars))
+            Save.write("Disponible")
+            Save.write(st2)
+            Save.write(state3)
+            Save.write(st3)
+            Save.close()
+            save=False
+
         #este pedazo se encarga de las colisiones
         for j in range(len(Aliens)):   
             for i in range(6,-1,-1):
@@ -524,6 +569,8 @@ def game():
         
         #pausa
         while pause:
+            mixer.music.pause()
+            canalAliens.pause()
             if cp<=500:
                 cp+=1
             else:
@@ -540,7 +587,11 @@ def game():
                 if event.type == p.KEYDOWN:
                     if event.key == p.K_ESCAPE:
                         if pause==True:
+                            canalpause.play(pausesound)
+                            mixer.music.unpause()
+                            canalAliens.unpause()
                             pause=False
+            clock.tick(60)
             p.display.update()
         clock.tick(60)
         p.display.update()
