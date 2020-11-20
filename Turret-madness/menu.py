@@ -1,8 +1,9 @@
 import pygame as p
 import sys
-import Clases_juego
+import Niveles
 p.init()
 p.mixer.init()
+p.display.set_caption("Tower-Madness")
 font= p.font.Font('Fuentes\\spacerunnertwoital.TTF',35)
 font_3= p.font.Font('Fuentes\\spacerunnertwoital.TTF',30)
 font_1= p.font.Font('Fuentes\\spacerunnertwoital.TTF',100)
@@ -14,11 +15,11 @@ bg_image=p.image.load("images\\fondo-proyecto.png")
 bg_image=bg_image.convert()
 boton=p.image.load("images\\boton.png")
 back=p.image.load("images\\flecha-regresar.png")
-select=p.mixer.Sound('efectos\\sonido_boton.mp3')
-tap=p.mixer.Sound('efectos\\boton_tap.mp3')
-p.mixer.music.load("effectos\\fondo.mp3")
-p.mixer.music.play(-1)
-p.mixer.music.set_volume(0.2)
+select=p.mixer.Sound('efectos\\sonido_boton.wav')
+tap=p.mixer.Sound('efectos\\boton_tap.wav')
+#p.mixer.music.load("effectos\\fondo.wav")
+#p.mixer.music.play(-1)
+#p.mixer.music.set_volume(0.2)
 canal1=p.mixer.Channel(0)
 canal2=p.mixer.Channel(1)
 
@@ -35,6 +36,7 @@ def main_menu():
     boton_2=None
     boton_3=None
     pos=540,300
+    k,k1,k2=0,0,0
     while running:
         if boton_1==None and boton_2==None and boton_3==None: 
             pantalla.blit(bg_image,(0,0))
@@ -63,28 +65,40 @@ def main_menu():
             boton_1=pantalla.blit(boton,(pos[0],pos[1]-5))
             draw_txt("JUGAR",font, (0,0,0),pantalla,580,303)
             draw_txt("JUGAR",font, (255,255,255),pantalla,578,300)
-            canal1.play(tap)
+            if k==0:
+                canal1.play(tap)
+                k+=1
             if click:
                 canal2.play(select)
-                Clases_juego.game()
+                Niveles.niveles()
+        else:
+            k=0
         if boton_2.collidepoint((mx,my)):
             pantalla.blit(bg_image,boton_2,boton_2)
             boton_2=pantalla.blit(boton,(pos[0],pos[1]+95))
             draw_txt("OPCIONES",font, (0,0,0),pantalla,554,403)
             draw_txt("OPCIONES",font, (255,255,255),pantalla,552,400)
-            canal1.play(tap)
+            if k1==0:
+                canal1.play(tap)
+                k1+=1
             if click:
                 canal1.play(select)
                 opciones()
+        else:
+            k1=0
         if boton_3.collidepoint((mx,my)):
             pantalla.blit(bg_image,boton_3,boton_3)
             boton_3=pantalla.blit(boton,(pos[0],pos[1]+195))
             draw_txt("CONTROLES",font_3, (0,0,0),pantalla,554,506)
             draw_txt("CONTROLES",font_3, (255,255,255),pantalla,552,503)
-            canal1.play(tap)            
-            if click: 
+            if k2==0:
+                canal1.play(tap)
+                k2+=1
+            if click:
                 canal1.play(select)
-                controles()
+                opciones()
+        else:
+            k2=0
         for event in p.event.get():
             if event.type==p.QUIT:
                 running=False
