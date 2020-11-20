@@ -2,7 +2,6 @@ import pygame as p
 import sys
 import numpy as np
 import lvl_1
-#import menu
 p.init()
 p.mixer.init()
 def niveles():
@@ -161,9 +160,7 @@ def niveles():
                 k1+=1
                 canal1.play(tap)
             if click:
-                #running=False
-                print("volví al menú, creanme")
-                #menu.main_menu()
+                break
                 click=False
         else:
             k1=0
