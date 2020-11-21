@@ -509,63 +509,12 @@ def game():
                     casilla=True
                     xhand=celdas[i*2][0]-25
                     yhand=celdas[i*2][1]+40
-                """if click:
-                    if est[0]==celdas[i*2][0] and est[1]==celdas[i*2][1]:
-                        if celdas[i*2+1].state:
-                            a[i*2+1]=turr
-                            a[i*2]=nb
-                            sal[i*2+1]=vidturr
-                            salud[i*2+1]=vid
-                        if a[i*2+1]!=-1 and a[i*2]!=-1:
-                            if not usable[nb]:
-                                vid=0
-                                nb=-1
-                                turr=-1
-                            if celdas[i+1].state:
-                                dinero-=(nb+1)*1000
-                                celdas[i*2+1]=celda(est[0],est[1],est[2])
-                        click=False
-                    est=(0,0,0)
-                elif est1[0]==celdas[i][0] and est1[1]==celdas[i][1]:
-                    a[i+1]=-1
-                    a[i]=-1
-                    salud[i+1]=0
-                    celdas[i+1]=celda(est1[0],est1[1],True)
-                    est1=(0,0,0)"""
+          
             else:
                 if superficies[i].collidepoint((Mx,My)):
                     casilla=True
                     xhand=celdas[i*2][0]-25
-                    yhand=celdas[i*2][1]+40
-                    """if click:
-                        if est[0]==celdas[i*2][0] and est[1]==celdas[i*2][1]:
-                            if celdas[i*2+1].state:
-                                a[i*2+1]=turr
-                                a[i*2]=nb
-                                sal[i*2+1]=vidturr
-                                salud[i*2+1]=vid
-                            if a[i*2+1]!=-1 and a[i*2]!=-1:
-                                if not usable[nb]:
-                                    vid=0
-                                    nb=-1
-                                    turr=-1
-                                if celdas[i+1].state:
-                                    dinero-=(nb+1)*1000
-                                    celdas[i*2+1]=celda(est[0],est[1],est[2])
-                        click=False
-                    est=(0,0,0)
-                elif est1[0]==celdas[i*2][0] and est1[1]==celdas[i*2][1]:
-                    a[i+1]=-1
-                    a[i]=-1
-                    salud[i+1]=0
-                    celdas[i+1]=celda(est1[0],est1[1],True)
-                    est1=(0,0,0)"""
-                
-            
-                    
-                    
-        #for i in range(1,70,2):
-            
+                    yhand=celdas[i*2][1]+40        
         if al<len(Alien1)-0.3:
             al+=0.3
         else:
