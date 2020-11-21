@@ -356,12 +356,12 @@ def game():
                     canalpause.play(pausesound)
                     pause=True
             elif event.type==p.MOUSEBUTTONDOWN:
-                if event.button==1 and casilla:
+                if event.button==1:
                     print("si")
                     click=True
                     est=mano.select()
                     canalselect.play(soundselect)
-                if event.button==2 and casilla:
+                if event.button==2:
                     est1=mano.select()
         Mx,My=p.mouse.get_pos()
         
@@ -506,13 +506,11 @@ def game():
         for i in range(35):
             if i%2==0:
                 if superficies[i].collidepoint((Mx,My)):
-                    casilla=True
                     xhand=celdas[i*2][0]-25
                     yhand=celdas[i*2][1]+40
           
             else:
                 if superficies[i].collidepoint((Mx,My)):
-                    casilla=True
                     xhand=celdas[i*2][0]-25
                     yhand=celdas[i*2][1]+40        
         if al<len(Alien1)-0.3:
