@@ -181,6 +181,7 @@ def game():
     balas=[]
     nb=-1
     turr=-1
+    superficies=[]
     #torretas
     for i in range(7):
         usable.append(False)
@@ -203,6 +204,7 @@ def game():
             a.append(-1)
             celdas.append((i,j))
             celdas.append(celda(i,j,True))
+            superficies.append(p.Rect(i,j,80,80))
 
     #Menú
     menu=[]
@@ -323,7 +325,10 @@ def game():
     fondoent=p.image.load("images\\fondo.png").convert()
     pause=False
     Run=True
+    click=False
     while Run:
+        casilla=False
+        
         for event in p.event.get():
             if event.type== p.QUIT:
                 Run=False
@@ -350,6 +355,16 @@ def game():
                 elif event.key== p.K_ESCAPE:
                     canalpause.play(pausesound)
                     pause=True
+            elif event.type==p.MOUSEBUTTONDOWN:
+                if event.button==1 and casilla:
+                    print("si")
+                    click=True
+                    est=mano.select()
+                    canalselect.play(soundselect)
+                if event.button==2 and casilla:
+                    est1=mano.select()
+        Mx,My=p.mouse.get_pos()
+        
         pantalla.blit(fondo,cfondo)
         p.draw.rect(pantalla,(0,0,0),(75,150,1000,30))
         p.draw.rect(pantalla,(50,50,50),(80,155,990,20))
@@ -358,17 +373,17 @@ def game():
             dinero+=50
         for l in range(1,7):
             p.draw.rect(pantalla,(0,0,0),(int(80+990*l/7),155,5,20))
-        
+        botones_menu=[]
         #Celdas y menú
         for i in range(70):
             if i%2!=0:
                 for j in range(7):
                     if (dinero-1000)/1000<j:
-                        pantalla.blit(menu[j+7],(mx[j],45))
+                        botones_menu.append(pantalla.blit(menu[j+7],(mx[j],45)))
                         usable[j]=False
                     else:
                         usable[j]=True
-                        pantalla.blit(menu[j],(mx[j],45))            
+                        botones_menu.append(pantalla.blit(menu[j],(mx[j],45)))            
                     if est[0]-65==mx[j] and est[1]==110:
                         if usable[j]:
                             turr=turrets[j]
@@ -388,7 +403,7 @@ def game():
                                 countenemigos[h]=1
                 celdas[i].mostrar(a[i],salud[i],sal[i])
             else:
-                if est[0]==celdas[i][0] and est[1]==celdas[i][1]:
+                if (est[0]==celdas[i][0] and est[1]==celdas[i][1]):
                     if celdas[i+1].state:
                         a[i+1]=turr
                         a[i]=nb
@@ -415,7 +430,6 @@ def game():
                     salud[i+1]=0
                     celdas[i+1]=celda(celdas[i][0],celdas[i][1],True)
                     
-        
         #Nucleo
         if countnucleo<len(nucleoimg)-0.4:
             countnucleo+=0.4
@@ -482,6 +496,76 @@ def game():
         elif xhand>950:
             xhand=950
         mano.mostrar(manoimg,0,0,angulo).cuadrado()
+        
+        for i in range(7):
+            if botones_menu[i].collidepoint((Mx,My)):
+                xhand=mx[i]-40
+                yhand=150
+                casilla=True
+            
+        for i in range(35):
+            if i%2==0:
+                if superficies[i].collidepoint((Mx,My)):
+                    casilla=True
+                    xhand=celdas[i*2][0]-25
+                    yhand=celdas[i*2][1]+40
+                """if click:
+                    if est[0]==celdas[i*2][0] and est[1]==celdas[i*2][1]:
+                        if celdas[i*2+1].state:
+                            a[i*2+1]=turr
+                            a[i*2]=nb
+                            sal[i*2+1]=vidturr
+                            salud[i*2+1]=vid
+                        if a[i*2+1]!=-1 and a[i*2]!=-1:
+                            if not usable[nb]:
+                                vid=0
+                                nb=-1
+                                turr=-1
+                            if celdas[i+1].state:
+                                dinero-=(nb+1)*1000
+                                celdas[i*2+1]=celda(est[0],est[1],est[2])
+                        click=False
+                    est=(0,0,0)
+                elif est1[0]==celdas[i][0] and est1[1]==celdas[i][1]:
+                    a[i+1]=-1
+                    a[i]=-1
+                    salud[i+1]=0
+                    celdas[i+1]=celda(est1[0],est1[1],True)
+                    est1=(0,0,0)"""
+            else:
+                if superficies[i].collidepoint((Mx,My)):
+                    casilla=True
+                    xhand=celdas[i*2][0]-25
+                    yhand=celdas[i*2][1]+40
+                    """if click:
+                        if est[0]==celdas[i*2][0] and est[1]==celdas[i*2][1]:
+                            if celdas[i*2+1].state:
+                                a[i*2+1]=turr
+                                a[i*2]=nb
+                                sal[i*2+1]=vidturr
+                                salud[i*2+1]=vid
+                            if a[i*2+1]!=-1 and a[i*2]!=-1:
+                                if not usable[nb]:
+                                    vid=0
+                                    nb=-1
+                                    turr=-1
+                                if celdas[i+1].state:
+                                    dinero-=(nb+1)*1000
+                                    celdas[i*2+1]=celda(est[0],est[1],est[2])
+                        click=False
+                    est=(0,0,0)
+                elif est1[0]==celdas[i*2][0] and est1[1]==celdas[i*2][1]:
+                    a[i+1]=-1
+                    a[i]=-1
+                    salud[i+1]=0
+                    celdas[i+1]=celda(est1[0],est1[1],True)
+                    est1=(0,0,0)"""
+                
+            
+                    
+                    
+        #for i in range(1,70,2):
+            
         if al<len(Alien1)-0.3:
             al+=0.3
         else:
@@ -490,7 +574,6 @@ def game():
             al1+=0.15
         else:
             al1=0
-            
         #este pedazo se encarga de mostrar los enemigos caminando
         enemigos=[]
         for i in range(len(Aliens)):
@@ -565,13 +648,13 @@ def game():
                                 vel[j] = 5
                             elif N[j]==2:
                                 vel[j] = 3
-            X[j]-=vel[j]  
-
+            X[j]-=vel[j]         
+        
         if countent>0:
             countent-=0.05
             fondoent.set_alpha(int(countent*255))
-            pantalla.blit(fondoent,(0,0))       
-        
+            pantalla.blit(fondoent,(0,0))  
+            
         #pausa
         while pause:
             mixer.music.pause()
