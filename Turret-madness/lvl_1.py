@@ -361,7 +361,7 @@ def game():
                     click=True
                     est=mano.select()
                     canalselect.play(soundselect)
-                if event.button==2:
+                if event.button==3:
                     est1=mano.select()
         Mx,My=p.mouse.get_pos()
         
