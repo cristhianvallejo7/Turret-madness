@@ -21,14 +21,17 @@ def niveles():
     #p.mixer.music.set_volume(0.2)
     canal1=p.mixer.Channel(0)
     canal2=p.mixer.Channel(1)
-    Save=open("Save.txt","r")
-    state1=Save.readline().replace("\n","")
-    st1=Save.readline().replace("\n","")
-    state2=Save.readline().replace("\n","")
-    st2=Save.readline().replace("\n","")
-    state3=Save.readline().replace("\n","")
-    st3=Save.readline().replace("\n","")
-    Save.close()
+    def guardado():
+        Save=open("Save.txt","r")
+        state1=Save.readline().replace("\n","")
+        st1=Save.readline().replace("\n","")
+        state2=Save.readline().replace("\n","")
+        st2=Save.readline().replace("\n","")
+        state3=Save.readline().replace("\n","")
+        st3=Save.readline().replace("\n","")
+        Save.close()
+        return state1,state2,state3,st1,st2,st3
+    state1,state2,state3,st1,st2,st3=guardado()
     k1,k2,k3,k4=0,0,0,0
     def draw_txt(texto, font, color, x, y,surface=pantalla):
         textobj=font.render(texto, True, color)
@@ -63,6 +66,10 @@ def niveles():
     counts=0
     S=[S1,S0]
     est=[]
+    j=[0,0,0]
+    nvl1=False
+    nvl2=False
+    nvl3=False
     for i in range(5):
         if i <int(st1):
             est.append(1)
@@ -85,8 +92,8 @@ def niveles():
         xs.append((i)*(200)/5+xesc[2]-80)
         ys.append(720/2+80)
     running=True
+    click=False
     while running:
-        click=False
         for event in p.event.get():
             if event.type==p.QUIT:
                 running=False
@@ -97,11 +104,14 @@ def niveles():
             elif event.type==p.MOUSEBUTTONDOWN:
                 if event.button==1:
                     click=True
+            if event.type==p.MOUSEBUTTONUP:
+                if event.button==1:
+                    click=False
         mx,my=p.mouse.get_pos()
         pantalla.blit(bg_image,(0,0))
         if xesc[0]-100<=mx<=xesc[0]+100 and yesc[0]-100<=my<yesc[0]+100:
             if click:
-                lvl_1.game()
+                nvl1=True
                 click=False
             if k2==0:
                 k2+=1
@@ -144,13 +154,14 @@ def niveles():
                     if countescotilla[i]>0:
                         countescotilla[i]-=0.3
             mostrar(xesc[i],yesc[i],imgnvls[n[i]][i])
-            mostrar(xesc[i],yesc[i],escotilla[int(countescotilla[i])])
+            mostrar(xesc[i],yesc[i],escotilla[int(countescotilla[i])],0)
         for i in range(15):
             if counts<360*np.pi:    
                 counts+=1
             else:
                 counts=0
             mostrar(xs[i],ys[i],S[est[i]],10*np.sin(counts/180))
+        draw_txt("Niveles",font_1,(0,0,0),1280/2+10,100+10)
         draw_txt("Niveles",font_1,(255,255,255),1280/2,100)
         boton_b=pantalla.blit(back,(50,630))
         if boton_b.collidepoint((mx,my)):
@@ -161,9 +172,47 @@ def niveles():
                 canal1.play(tap)
             if click:
                 break
-                click=False
         else:
             k1=0
+        if nvl1:
+            if j[0]<1:
+                j[0]+=0.05
+                mostrar(1280/2,720/2, p.image.load("images\\fondo.png").convert(),0,j[0])
+            else:
+                nvl1=False
+                j[0]=0
+                lvl_1.game()
+                state1,state2,state3,st1,st2,st3=guardado()
+                states=[state1,state2,state3]
+                est=[]
+                xs=[]
+                ys=[]
+                for i in range(5):
+                    if i <int(st1):
+                        est.append(1)
+                    else:
+                        est.append(0)
+                    xs.append((i)*(200)/5+xesc[0]-80)
+                    ys.append(720/2+80)
+                for i in range(5):
+                    if i<int(st2):
+                        est.append(1)
+                    else:
+                        est.append(0)
+                    xs.append((i)*(200)/5+xesc[1]-80)
+                    ys.append(720/2+80)
+                for i in range(5):
+                    if i <int(st3):
+                        est.append(1)
+                    else:
+                        est.append(0)
+                    xs.append((i)*(200)/5+xesc[2]-80)
+                    ys.append(720/2+80)
+                n=[]
+                for i in range(3):
+                    if states[i]=="Completo":
+                        n.append(1)
+                    else:
+                        n.append(0)
         p.display.update()
         clock.tick(60)
-niveles()
