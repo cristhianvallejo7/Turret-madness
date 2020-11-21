@@ -13,6 +13,7 @@ def game():
     state3=Save.readline()
     st3=Save.readline()
     Save.close()
+    countent=1
     class Torreta:
         def __init__(self,x,y,salud,salud_total=1):
             self.x=int(x)
@@ -246,7 +247,7 @@ def game():
         N.append(n)
         Aliens.append(Alien2)
         vel.append(5)
-        X.append(1280+i*1400)
+        X.append(1280+i*1400+500)
         Y.append(240+r.randint(0,4)*100)
         countenemigos.append(0)
     for i in range(8):
@@ -256,7 +257,7 @@ def game():
         N.append(n)
         Aliens.append(Alien1)
         vel.append(5)
-        X.append(2200 + i * 1200)
+        X.append(2200 + i * 1200+500)
         Y.append(240 + r.randint(0, 4) * 100)
         countenemigos.append(0)
     for i in range(4):
@@ -266,7 +267,7 @@ def game():
         N.append(n)
         Aliens.append(Alien2)
         vel.append(5)
-        X.append(4280+i*1200)
+        X.append(4280+i*1200+500)
         Y.append(240+r.randint(0,4)*100)
         countenemigos.append(0)
     for i in range(6):
@@ -276,7 +277,7 @@ def game():
         N.append(n)
         Aliens.append(Alien1)
         vel.append(5)
-        X.append(5000 + i * 1200)
+        X.append(5000 + i * 1200+500)
         Y.append(240 + r.randint(0, 4) * 100)
         countenemigos.append(0)
     daño=np.zeros(len(N))
@@ -319,6 +320,7 @@ def game():
         hola=font.render(a,True,(color*255,color*255,color*255))
         cent=hola.get_rect(center=(int(1280/2),int(720/2)))
         pantalla.blit(hola,cent)
+    fondoent=p.image.load("images\\fondo.png").convert()
     pause=False
     Run=True
     while Run:
@@ -493,15 +495,12 @@ def game():
         enemigos=[]
         for i in range(len(Aliens)):
             enemigos.append(enemigo(X[i],Y[i],vidaenemigo[i]-daño[i],vidaenemigototal[i]))
-            if X[i]<=0:
-                X[i]=1280+r.randint(0,len(Aliens))*100
-                Y[i]=240+r.randint(0,4)*100
             if vel[i]!=0:
-                X[i]-=vel[i]
-                enemigos[i].mostrar(eval("Aliens["+str(i)+"][int(al)]")).vida()
+                if -100<=X[i]<=1380:
+                    X[i]-=vel[i]
+                    enemigos[i].mostrar(eval("Aliens["+str(i)+"][int(al)]")).vida()
         if countenemigos.count(1)==len(N):
             countenemigos[0]=0
-            print("Ganó")
             save=True
         
         #Guardado
@@ -510,14 +509,15 @@ def game():
             Save=open("Save.txt","w")
             Save.close()
             Save=open("Save.txt","a")
-            Save.write("Completado\n")
-            Save.write(str(stars))
-            Save.write("Disponible")
+            Save.write("Completo\n")
+            Save.write(str(stars)+"\n")
+            Save.write("Disponible"+"\n")
             Save.write(st2)
             Save.write(state3)
             Save.write(st3)
             Save.close()
             save=False
+            break
 
         #este pedazo se encarga de las colisiones
         for j in range(len(Aliens)):   
@@ -565,7 +565,12 @@ def game():
                                 vel[j] = 5
                             elif N[j]==2:
                                 vel[j] = 3
-            X[j]-=vel[j]         
+            X[j]-=vel[j]  
+
+        if countent>0:
+            countent-=0.05
+            fondoent.set_alpha(int(countent*255))
+            pantalla.blit(fondoent,(0,0))       
         
         #pausa
         while pause:
