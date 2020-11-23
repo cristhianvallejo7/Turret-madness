@@ -241,8 +241,8 @@ def game():
         Alien2.append(p.image.load("images\\Alien2"+str(i)+".png").convert_alpha())
         Alien3.append(p.image.load("images\\Alien3"+str(i)+".png").convert_alpha())
         Alien4.append(p.image.load("images\\Alien4"+str(i)+".png").convert_alpha())
-
-    for i in range(7): #Esta variable controla el número de enemigos en el tablero
+    #N=tipo enemigo_L=inicio fase de nivel
+    for i in range(9): #N2L1
         vidaenemigo.append(200)
         vidaenemigototal.append(200)
         n=2
@@ -252,7 +252,27 @@ def game():
         X.append(1280+i*1400+500)
         Y.append(240+r.randint(0,4)*100)
         countenemigos.append(0)
-    for i in range(8):
+    for i in range(6): #N2L2
+        vidaenemigo.append(200)
+        vidaenemigototal.append(200)
+        n=2
+        N.append(n)
+        Aliens.append(Alien2)
+        vel.append(5)
+        X.append(4580+i*1400)
+        Y.append(240+r.randint(0,4)*100)
+        countenemigos.append(0)
+    for i in range(3): #N2L3
+        vidaenemigo.append(200)
+        vidaenemigototal.append(200)
+        n=2
+        N.append(n)
+        Aliens.append(Alien2)
+        vel.append(5)
+        X.append(8780+i*1400)
+        Y.append(240+r.randint(0,4)*100)
+        countenemigos.append(0)
+    for i in range(11):#N1L1
         vidaenemigo.append(150)
         vidaenemigototal.append(150)
         n = 1
@@ -262,7 +282,27 @@ def game():
         X.append(2200 + i * 1200+500)
         Y.append(240 + r.randint(0, 4) * 100)
         countenemigos.append(0)
-    for i in range(4):
+    for i in range(8):#N1L2
+        vidaenemigo.append(150)
+        vidaenemigototal.append(150)
+        n = 1
+        N.append(n)
+        Aliens.append(Alien1)
+        vel.append(5)
+        X.append(6300+ i * 1200)
+        Y.append(240 + r.randint(0, 4) * 100)
+        countenemigos.append(0)
+    for i in range(4):#N1L3
+        vidaenemigo.append(150)
+        vidaenemigototal.append(150)
+        n = 1
+        N.append(n)
+        Aliens.append(Alien1)
+        vel.append(5)
+        X.append(9900+ i * 1200)
+        Y.append(240 + r.randint(0, 4) * 100)
+        countenemigos.append(0)
+    for i in range(5):#N2L1
         vidaenemigo.append(200)
         vidaenemigototal.append(200)
         n=2
@@ -272,7 +312,27 @@ def game():
         X.append(4280+i*1200+500)
         Y.append(240+r.randint(0,4)*100)
         countenemigos.append(0)
-    for i in range(6):
+    for i in range(3):#N2L2
+        vidaenemigo.append(200)
+        vidaenemigototal.append(200)
+        n=2
+        N.append(n)
+        Aliens.append(Alien2)
+        vel.append(5)
+        X.append(5980+i*1200)
+        Y.append(240+r.randint(0,4)*100)
+        countenemigos.append(0)
+    for i in range(2):#N2L3
+        vidaenemigo.append(200)
+        vidaenemigototal.append(200)
+        n=2
+        N.append(n)
+        Aliens.append(Alien2)
+        vel.append(5)
+        X.append(7180+i*1200)
+        Y.append(240+r.randint(0,4)*100)
+        countenemigos.append(0)
+    for i in range(8):#N1L1
         vidaenemigo.append(150)
         vidaenemigototal.append(150)
         n = 1
@@ -280,6 +340,26 @@ def game():
         Aliens.append(Alien1)
         vel.append(5)
         X.append(5000 + i * 1200+500)
+        Y.append(240 + r.randint(0, 4) * 100)
+        countenemigos.append(0)
+    for i in range(5):#N1L2
+        vidaenemigo.append(150)
+        vidaenemigototal.append(150)
+        n = 1
+        N.append(n)
+        Aliens.append(Alien1)
+        vel.append(5)
+        X.append(7900+ i * 1200)
+        Y.append(240 + r.randint(0, 4) * 100)
+        countenemigos.append(0)
+    for i in range(3):#N1L3
+        vidaenemigo.append(150)
+        vidaenemigototal.append(150)
+        n = 1
+        N.append(n)
+        Aliens.append(Alien1)
+        vel.append(5)
+        X.append(10300 + i * 1200)
         Y.append(240 + r.randint(0, 4) * 100)
         countenemigos.append(0)
     daño=np.zeros(len(N))
