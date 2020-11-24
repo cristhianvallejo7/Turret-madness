@@ -94,11 +94,15 @@ def main_menu():
 
 
 def reiniciar():
-    clock.tick(60)
-
-
+    running = False
+    import lvl_1
+    sys.exit()
+    clock.tick(60)  
+    
 def salir():
-    clock.tick(60)
+    running = False
+    sys.exit()
+    clock.tick(60) 
 
 
 main_menu()
