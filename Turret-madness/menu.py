@@ -1,6 +1,9 @@
 import pygame as p
 import sys
 import Niveles
+import opciones
+import control
+controles=True
 p.init()
 p.mixer.init()
 p.display.set_caption("Tower-Madness")
@@ -30,6 +33,7 @@ def draw_txt(texto, font, color, surface, x, y):
     surface.blit(textobj,textrect)    
     
 def main_menu():
+    global controles
     running=True
     click=False
     boton_1=None
@@ -86,8 +90,10 @@ def main_menu():
                 canal1.play(tap)
                 k1+=1
             if click:
+                click=False
                 canal1.play(select)
-                opciones()
+                a=opciones.opciones()
+                controles=a
         else:
             k1=0
             
@@ -101,8 +107,9 @@ def main_menu():
                 canal1.play(tap)
                 k2+=1
             if click:
+                click=False
                 canal1.play(select)
-                opciones()
+                control.controles_1(
         else:
             
             k2=0
@@ -119,69 +126,6 @@ def main_menu():
                     click=True
         p.display.update()
         clock.tick(60)
-def opciones():
-    running = True 
-    click=False
-    while running:
-        casilla=False
-        pantalla.blit(bg_image,(0,0))
-        draw_txt("opciones",font_1, (0,0,0),pantalla,343,83)
-        draw_txt("opciones",font_1, (255,255,255),pantalla,330,80)
-        mx,my=p.mouse.get_pos()
-        boton_b=pantalla.blit(back,(50,630))
-        if boton_b.collidepoint((mx,my)):
-            casilla=True
-            pantalla.blit(bg_image,boton_b,boton_b)
-            boton_b=pantalla.blit(back,(50,625))
-            canal1.play(tap)
-            if click:
-                running=False
-                main_menu()
-        for event in p.event.get():
-            if event.type==p.QUIT:
-                p.quit()
-                sys.exit()
-            elif event.type==p.KEYDOWN:
-                if event.key==p.K_ESCAPE:
-                    running==False
-                    main_menu()
-            elif event.type==p.MOUSEBUTTONDOWN:
-                if event.button==1 and casilla:
-                    click=True
-        p.display.update()
-        clock.tick(60)
 
-def controles():
-    
-    running = True 
-    click=False
-    while running:
-        casilla=False
-        pantalla.blit(bg_image,(0,0))
-        draw_txt("CONTROLES",font_1, (0,0,0),pantalla,343,83)
-        draw_txt("CONTROLES",font_1, (255,255,255),pantalla,330,80)
-        mx,my=p.mouse.get_pos()
-        boton_b=pantalla.blit(back,(50,630))
-        if boton_b.collidepoint((mx,my)):
-            casilla=True
-            pantalla.blit(bg_image,boton_b,boton_b)
-            boton_b=pantalla.blit(back,(50,625))
-            canal1.play(tap)
-            if click:
-                running=False
-                main_menu()
-        for event in p.event.get():
-            if event.type==p.QUIT:
-                p.quit()
-                sys.exit()
-            elif event.type==p.KEYDOWN:
-                if event.key==p.K_ESCAPE:
-                    running==False
-                    main_menu()
-            elif event.type==p.MOUSEBUTTONDOWN:
-                if event.button==1 and casilla:
-                    click=True
-        p.display.update()
-        clock.tick(60)
 main_menu()
 
