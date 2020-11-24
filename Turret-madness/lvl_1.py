@@ -326,6 +326,7 @@ def game():
     pause=False
     Run=True
     click=False
+    contadormuertes = 0
     while Run:
         casilla=False
         
@@ -397,6 +398,7 @@ def game():
                             balas[i//2].mostrar(balimg[a[i-1]],False,a[i-1],True)
                             daño[h]+=10
                             if daño[h]>=vidaenemigototal[h]:
+                                contadormuertes += 1
                                 X[h]=5000
                                 Y[h]=5000
                                 daño[h]=0
@@ -447,6 +449,7 @@ def game():
                     if abs(xn[i]-X[k])<40 and yn[i]==Y[k]:
                         X[k]=1280+r.randint(0,len(Aliens))*100
                         Y[k]=240+r.randint(0,4)*100
+                        contadormuertes += 1
                     if X[k]<20:
                         estadonucleo[i]=2
                 pantalla.blit(pilar,cpilar[i])
@@ -465,7 +468,7 @@ def game():
                         xn[i],yn[i]=5000,5000
             if estadonucleo[i]==2:
                 pantalla.blit(pilar,cpilar[i])
-                print("Game over")
+                import gameover
                 estadonucleo[i]=3
         if movera or moverd or moverl or moverr:
             canalmano.play(soundmano)
@@ -600,7 +603,10 @@ def game():
         if countent>0:
             countent-=0.05
             fondoent.set_alpha(int(countent*255))
-            pantalla.blit(fondoent,(0,0))  
+            pantalla.blit(fondoent,(0,0))
+        
+        if contadormuertes == 2:
+            import levelwin
             
         #pausa
         while pause:
